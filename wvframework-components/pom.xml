@@ -9,9 +9,20 @@
     </parent>
 
 
-    <artifactId>wvframework-models</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>wvframework-components</artifactId>
+    <packaging>pom</packaging>
     <version>${revision}</version>
+
+    <modules>
+        <module>wvframework-cache</module>
+        <module>wvframework-core</module>
+        <module>wvframework-excel</module>
+        <module>wvframework-json</module>
+        <module>wvframework-mock</module>
+        <module>wvframework-lombok</module>
+        <module>wvframework-dao</module>
+        <module>wvframework-validation</module>
+    </modules>
 
 
 </project>

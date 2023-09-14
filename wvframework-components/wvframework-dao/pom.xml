@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wvframework</groupId>
-        <artifactId>wvframework-starters</artifactId>
+        <artifactId>wvframework-components</artifactId>
         <version>${revision}</version>
     </parent>
 
-
-    <artifactId>wvframework-web-starter</artifactId>
+    <artifactId>wvframework-dao</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
 
