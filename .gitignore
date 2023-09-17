@@ -31,3 +31,4 @@ build/
 /mvnw.cmd
 /.mvn/
 /.idea/
+.flattened-pom.xml

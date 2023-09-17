@@ -1,4 +1,4 @@
-# wv-framework
+# wv-framework 行空框架
 让java程序员写更少的代码；Let Java programmers write less code;
 
 ```text
@@ -16,4 +16,5 @@
 |--wvframework-starters:
     |--wvframework-web-starter: web starter
 |--wvframework-utils: 工具类
+|--pom.xml: 全局父pom，依赖管理
 ```
