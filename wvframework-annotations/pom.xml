@@ -15,12 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.wvframework</groupId>
-            <artifactId>wvframework-json</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <scope>provided</scope>

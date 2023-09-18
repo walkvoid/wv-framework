@@ -1,10 +1,10 @@
-package com.wvframework.annotations;
+package com.wvframework.json;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wvframework.annotations.jackson.BaseEnumDeserializer;
-import com.wvframework.annotations.jackson.BaseEnumSerializer;
+import com.wvframework.json.BaseEnumDeserializer;
+import com.wvframework.json.BaseEnumSerializer;
 
 /**
  * @author jiangjunqing
