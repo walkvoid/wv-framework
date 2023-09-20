@@ -32,3 +32,4 @@ build/
 /.mvn/
 /.idea/
 .flattened-pom.xml
+**/*.iml
