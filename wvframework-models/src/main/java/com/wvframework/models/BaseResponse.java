@@ -11,11 +11,11 @@ class BaseResponse extends Traceable {
 
     protected String code;
 
-    protected String msg;
+    protected String message;
 
-    protected BaseResponse(String code, String msg) {
+    protected BaseResponse(String code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     public String getCode() {
@@ -26,11 +26,11 @@ class BaseResponse extends Traceable {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

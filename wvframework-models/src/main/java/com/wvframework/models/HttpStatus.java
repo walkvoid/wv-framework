@@ -56,18 +56,18 @@ public enum HttpStatus {
 
     private final int value;
 
-    private final String msg;
+    private final String message;
 
-    HttpStatus(int value, String msg) {
+    HttpStatus(int value, String message) {
         this.value = value;
-        this.msg = msg;
+        this.message = message;
     }
 
     public int getValue() {
         return value;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 }
