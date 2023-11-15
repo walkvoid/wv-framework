@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @date 2023/10/13
  * @desc 基础的webResponse,包含了一个供前端使用的消息等级
  */
-public class BaseWebResponse extends BaseResponse implements Serializable {
+class BaseWebResponse extends BaseResponse implements Serializable {
     private static final long serialVersionUID = -4405513283022040676L;
 
     /**
@@ -16,7 +16,7 @@ public class BaseWebResponse extends BaseResponse implements Serializable {
      */
     private String messageLevel;
 
-    public BaseWebResponse(String code, String message, String messageLevel) {
+    protected BaseWebResponse(String code, String message, String messageLevel) {
         super(code, message);
         this.messageLevel = messageLevel;
     }

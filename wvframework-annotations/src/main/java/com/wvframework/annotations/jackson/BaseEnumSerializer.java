@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.wvframework.annotations.BaseEnum;
 
 import java.io.IOException;
+import java.util.ServiceLoader;
 
 /**
  * @author jiangjunqing
@@ -33,4 +34,7 @@ public class BaseEnumSerializer extends JsonSerializer<Object> implements Contex
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws JsonMappingException {
         return null;
     }
+
+
+
 }

@@ -7,10 +7,11 @@ import com.wvframework.annotations.jackson.BaseEnumDeserializer;
 import com.wvframework.annotations.jackson.BaseEnumSerializer;
 
 /**
- * @author jiangjunqing
+ * @author walkvoid
  * @version v0.0.1
- * @date 2023/9/17
- * @desc
+ * @desc 标记一个枚举为基础的枚举类型：
+ * 1、此类枚举可以指定一个字段作为该枚举的（反）序列化字段。
+ * 2、如果引入了wvframework-web-starter，提供一个查询所有标记了该注解枚举集合的列表接口
  */
 
 @JacksonAnnotationsInside
@@ -18,8 +19,16 @@ import com.wvframework.annotations.jackson.BaseEnumSerializer;
 @JsonDeserialize(using = BaseEnumDeserializer.class)
 public @interface BaseEnum {
 
-    String name();
+    /**
+     * 别名,可用作枚举列表展示，如果为空，默认为枚举的类名
+     * @return
+     */
+    String alias();
 
-    String enumField() default "value";
+    /**
+     * （反）序列化字段，如果为空，默认为Enum.name()
+     * @return
+     */
+    String enumField();
 
 }
