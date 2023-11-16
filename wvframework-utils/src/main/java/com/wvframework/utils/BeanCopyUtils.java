@@ -2,16 +2,16 @@ package com.wvframework.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
+
 import java.util.*;
 
 /**
- * @author jiangjunqing
- * @date 2023/9/18
+ * @author walkvoid
  * @desc bean属性复制工具类
- *
  */
 public class BeanCopyUtils {
-    private static final Log logger = LogFactory.getLog(org.springframework.beans.CachedIntrospectionResults.class);
+    private static final Log logger = LogFactory.getLog(BeanCopyUtils.class);
 
     /**
      * 复制一个普通的bean
@@ -27,12 +27,32 @@ public class BeanCopyUtils {
         if (targetType == null) {
             throw new RuntimeException("targetType must not be null");
         }
-
-        return null;
+        T t = BeanUtils.instantiateClass(targetType);
+        BeanUtils.copyProperties(source, t);
+        return t;
     }
 
-    public static <T> List<T> copyList(List<?> source, Class<T> targetType){
-        return null;
+    /**
+     * copy list
+     * @param source
+     * @param targetType
+     * @return
+     * @param <T>
+     */
+    public static <T> List<T> copyList(List<?> source, Class<T> targetType) {
+        if (CollectionUtils.isEmpty(source)) {
+            return CollectionUtils.newArrayList();
+        }
+        if (targetType == null) {
+            throw new RuntimeException("targetType must not be null");
+        }
+        ArrayList<T> arrayList = CollectionUtils.newArrayList();
+        for (Object item : source) {
+            T t = BeanUtils.instantiateClass(targetType);
+            BeanUtils.copyProperties(item, t);
+            arrayList.add(t);
+        }
+        return arrayList;
     }
 
 
