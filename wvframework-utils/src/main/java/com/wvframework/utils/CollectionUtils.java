@@ -22,10 +22,7 @@ public class CollectionUtils {
     }
 
     public static int size(Collection<?> collection){
-        if (collection == null) {
-            return 0;
-        }
-        return collection.size();
+        return collection == null ? 0 : collection.size();
     }
 
     public static <E> ArrayList<E> newArrayList(){
