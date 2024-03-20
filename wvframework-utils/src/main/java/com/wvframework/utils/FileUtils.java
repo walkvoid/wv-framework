@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 
 
 /**
@@ -95,6 +97,17 @@ public class FileUtils {
             response.addHeader("Content-Length", "" + len);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 如果不存在就创建文件夹
+     * @param path
+     */
+    public void createDirectoryIfNotExist(String path){
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
         }
     }
 

@@ -50,7 +50,7 @@ public class TemporalUtils {
     }
 
     /**
-     * 解析一个字符串,并可以指定日期格式和指定期望的类型
+     * 将一个long型的时间戳解析成时间格式
      * @param epochSecond
      * @param except
      * @param <T>
