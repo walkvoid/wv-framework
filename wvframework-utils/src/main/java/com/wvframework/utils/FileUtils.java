@@ -15,6 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -49,56 +53,7 @@ public class FileUtils {
         }
     }
 
-    /**
-     * 将文件写入到HttpServletResponse，默认取文件名
-     * @param file
-     * @param response
-     */
-    public static void writeToHttpServletResponse(File file, HttpServletResponse response) {
-        writeToHttpServletResponse(file,file.getName(),response);
-    }
 
-    /**
-     * 将文件写入到HttpServletResponse，并支持使用newFileName进行重命名
-     * @param file
-     * @param newFileName
-     * @param response
-     */
-    public static void writeToHttpServletResponse(File file, String newFileName, HttpServletResponse response) {
-        Assert.notNull(file,"file must not be null");
-        try {
-            writeToHttpServletResponse(new FileInputStream(file), newFileName, response);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 将文件输入流写到HttpServletResponse中
-     * @param inputStream
-     * @param fileName
-     * @param response
-     */
-    public static void writeToHttpServletResponse(InputStream inputStream, String fileName, HttpServletResponse response) {
-        Assert.hasText(fileName, "fileName must have length; it must not be null or empty");
-        Assert.notNull(response,"response must not be null");
-
-        String encodeFileName = "";
-        try {
-            encodeFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ignored) {
-
-        }
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeFileName + "\"");
-        try {
-            long len = copy(inputStream, response.getOutputStream());
-            response.addHeader("Content-Length", "" + len);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * 如果不存在就创建文件夹
@@ -119,7 +74,7 @@ public class FileUtils {
      * @return
      * @throws IOException
      */
-    private static long copy(InputStream source, OutputStream sink) throws IOException {
+    public static long copy(InputStream source, OutputStream sink) throws IOException {
         long nread = 0L;
         byte[] buf = new byte[8192];
         int n;
@@ -128,5 +83,17 @@ public class FileUtils {
             nread += n;
         }
         return nread;
+    }
+
+    public static void main(String[] args) throws Exception {
+        ArrayList<String> strings = CollectionUtils.newArrayList("D:\\lls\\jiangjunqing\\Desktop\\whatisai.pdf",
+                "D:\\lls\\jiangjunqing\\Desktop\\fapiao1.jpg", "D:\\lls\\jiangjunqing\\Desktop\\fapiao2.jpg");
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("D:\\lls\\jiangjunqing\\Desktop\\xxxx.zip")));
+        for (String filePath : strings) {
+            File file = new File(filePath);
+            zos.putNextEntry(new ZipEntry(file.getName()));
+            zos.closeEntry();
+        }
+        zos.close();
     }
 }
