@@ -1,6 +1,9 @@
 package com.wvframework.validation;
 
+import com.wvframework.validation.mvc.ValidationExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,6 +13,13 @@ import org.springframework.context.annotation.Configuration;
  * @desc 自动配置类
  */
 @Configuration
-@ConditionalOnProperty(name = "wvframework.validation.enabled",havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "wvframework.validation.enabled", havingValue = "true", matchIfMissing = true)
 public class ValidationAutoConfiguration {
+
+    @Bean
+    @ConditionalOnWebApplication
+    public ValidationExceptionHandler validationExceptionHandler() {
+        return new ValidationExceptionHandler();
+    }
+
 }

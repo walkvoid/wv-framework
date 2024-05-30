@@ -6,9 +6,9 @@ import java.io.Serializable;
  * @author jiangjunqing
  * @version v1.0.0
  * @date 2023/10/13
- * @desc 基础的webResponse,包含了一个供前端使用的消息等级
+ * @desc 基础的webResponse,包含了一个供前端使用的消息等级，不建议在业务controller中直接使用此类
  */
-class BaseWebResponse extends BaseResponse implements Serializable {
+public class BaseWebResponse extends BaseResponse implements Serializable {
     private static final long serialVersionUID = -4405513283022040676L;
 
     /**
@@ -24,7 +24,7 @@ class BaseWebResponse extends BaseResponse implements Serializable {
     /**
      * 给前端用户的提示消息等级
      */
-    protected enum MessageLevel {
+    public enum MessageLevel {
 
         /**
          * 响应成功，前端用户不需要看到任何提示信息

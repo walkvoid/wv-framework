@@ -106,6 +106,18 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
         return new WebResponse<R>(String.valueOf(status.getValue()), status.getMessage(), data, messageLevel.name().toLowerCase());
     }
 
+    /**
+     * 不建议使用，但不是强制的，旨在提供一个更灵活的构造WebResponse的方法
+     * @param status
+     * @param data
+     * @param messageLevel
+     * @return
+     * @param <R>
+     */
+    public static <R> WebResponse<R> of(HttpStatus status, String message, R data, BaseWebResponse.MessageLevel messageLevel) {
+        return new WebResponse<R>(String.valueOf(status.getValue()), message, data, messageLevel.name().toLowerCase());
+    }
+
 
 
 }
