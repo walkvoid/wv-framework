@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.13.5</jackson.version>
         <spring.version>5.3.28</spring.version>
-        <spring-boot.version>2.7.13</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <modules>
@@ -40,7 +40,21 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.imports</include>
+                    <include>**/*.json</include>
+                    <include>**/*.factories</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
+
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>

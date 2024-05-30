@@ -4,18 +4,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wvframework</groupId>
-        <artifactId>wv-framework</artifactId>
+        <artifactId>wvframework-starters</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>wvframework-starters</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>wvframework-validation-starter</artifactId>
+    <packaging>jar</packaging>
     <version>${revision}</version>
 
-    <modules>
-        <module>wvframework-web-starter</module>
-        <module>wvframework-validation-starter</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.wvframework</groupId>
+            <artifactId>wvframework-validation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
