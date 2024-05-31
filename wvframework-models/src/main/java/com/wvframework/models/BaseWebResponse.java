@@ -1,6 +1,5 @@
 package com.wvframework.models;
 
-import java.io.Serializable;
 
 /**
  * @author jiangjunqing
@@ -8,17 +7,38 @@ import java.io.Serializable;
  * @date 2023/10/13
  * @desc 基础的webResponse,包含了一个供前端使用的消息等级，不建议在业务controller中直接使用此类
  */
-public class BaseWebResponse extends BaseResponse implements Serializable {
+public class BaseWebResponse extends Traceable {
     private static final long serialVersionUID = -4405513283022040676L;
+
+    protected Integer code;
+
+    protected String message;
 
     /**
      * msg的消息等级，需要和前端配合使用
      */
     private String messageLevel;
 
-    protected BaseWebResponse(String code, String message, String messageLevel) {
-        super(code, message);
+    protected BaseWebResponse(Integer code, String message, String messageLevel) {
+        this.code = code;
+        this.message = message;
         this.messageLevel = messageLevel;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**

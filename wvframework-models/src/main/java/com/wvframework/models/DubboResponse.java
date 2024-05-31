@@ -14,9 +14,19 @@ public class DubboResponse<R> extends Traceable {
 
     private Exception exception;
 
-    public static DubboResponse of(){
-        return null;
+    public static <R> DubboResponse<R> of(boolean isSuccess, R data, Exception exception){
+        return new DubboResponse<>(isSuccess, data, exception);
     }
+
+    public static <R> DubboResponse<R> success(R data){
+        return new DubboResponse<>(true, data, null);
+    }
+
+    public static <R> DubboResponse<R> fail(R data, Exception exception){
+        return new DubboResponse<>(false, data, exception);
+    }
+
+
 
     private DubboResponse(boolean isSuccess, R data, Exception exception) {
         this.isSuccess = isSuccess;
