@@ -1,22 +1,13 @@
 package com.wvframework.utils;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.http.MediaType;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -26,6 +17,11 @@ import java.util.zip.ZipOutputStream;
  * @desc file utils
  */
 public class FileUtils {
+
+    /**
+     * java环境的临时目录
+     */
+    public final static String JAVA_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
 
     /**
@@ -54,7 +50,6 @@ public class FileUtils {
     }
 
 
-
     /**
      * 如果不存在就创建文件夹
      * @param path
@@ -64,6 +59,108 @@ public class FileUtils {
         if (!file.exists()) {
             file.mkdir();
         }
+    }
+
+    /**
+     * 保存字节内容到文件中
+     * @param content 需要保存在文件的内容的字节数组
+     * @param dest 写入文件的路径，包含了文件目录和文件名，一般采用Paths.of()
+     */
+    public static void writeToFile(byte[] content, Path dest) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(new File(dest.toUri()));
+            fileOutputStream.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("写入字节数组到文件失败。",e);
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 保存字符串内容到文件中
+     * @param content 需要保存在文件的内容的字符串
+     * @param dest 写入文件的路径，包含了文件目录和文件名，一般采用Paths.of(fileParentDict，fileName的方式构造)
+     */
+    public static void writeToFile(String content, Path dest) {
+        if (StringUtils.isNotEmpty(content)) {
+            writeToFile(content.getBytes(StandardCharsets.UTF_8), dest);
+        } else {
+            //
+        }
+    }
+
+    /**
+     * 从文件中读取字符串内容并返回
+     * @param dest 读取文件的路径，包含了文件目录和文件名，一般采用Paths.of(fileParentDict，fileName的方式构造)
+     */
+    public static String readFromFile(Path dest) {
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(new File(dest.toUri()));
+            StringBuilder sb = new StringBuilder();
+            int i;
+            while ((i=fileReader.read())>0) {
+                sb.append((char)i);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("读取文件的字符串内容失败.",e);
+        } finally {
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 保存字符串内容到文件中
+     * @param dest 读取文件的路径，包含了文件目录和文件名，一般采用Paths.of(fileParentDict，fileName的方式构造)
+     */
+    public static byte[] readBytesFromFile(Path dest) {
+        FileInputStream fileInputStream = null;
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        try {
+            fileInputStream = new FileInputStream(new File(dest.toUri()));
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int i;
+            while ((i = fileInputStream.read(buf)) >0) {
+                byteArrayOutputStream.write(buf, 0, i);
+            }
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("读取文件的字节数组失败，文件:"+dest+",e:" + e);
+        } finally {
+            if (fileInputStream !=null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (byteArrayOutputStream !=null) {
+                try {
+                    byteArrayOutputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+
+
     }
 
 

@@ -21,7 +21,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      */
     private String messageLevel;
 
-    protected WebResponse(String code, String message, R data, String messageLevel) {
+    protected WebResponse(Integer code, String message, R data, String messageLevel) {
         super(code, message, messageLevel);
         this.data = data;
     }
@@ -44,7 +44,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @param <R>
      */
     public static <R> WebResponse<R> info(String message,R data) {
-        return of(String.valueOf(HttpStatus.OK.getValue()), message, data, BaseWebResponse.MessageLevel.INFO);
+        return of(HttpStatus.OK.getValue(), message, data, BaseWebResponse.MessageLevel.INFO);
     }
 
     /**
@@ -55,7 +55,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @param <R>
      */
     public static <R> WebResponse<R> warning(String message, R data) {
-        return of(String.valueOf(HttpStatus.OK.getValue()), message, data, BaseWebResponse.MessageLevel.WARNING);
+        return of(HttpStatus.OK.getValue(), message, data, BaseWebResponse.MessageLevel.WARNING);
     }
 
     /**
@@ -77,7 +77,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @return
      * @param <R>
      */
-    public static <R> WebResponse<R> of(String code, String message, R data, String messageLevel) {
+    public static <R> WebResponse<R> of(Integer code, String message, R data, String messageLevel) {
         return new WebResponse<R>(code, message, data, messageLevel);
     }
 
@@ -90,7 +90,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @return
      * @param <R>
      */
-    public static <R> WebResponse<R> of(String code, String message, R data, BaseWebResponse.MessageLevel messageLevel) {
+    public static <R> WebResponse<R> of(Integer code, String message, R data, BaseWebResponse.MessageLevel messageLevel) {
         return new WebResponse<R>(code, message, data, messageLevel.name().toLowerCase());
     }
 
@@ -103,7 +103,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @param <R>
      */
     public static <R> WebResponse<R> of(HttpStatus status, R data, BaseWebResponse.MessageLevel messageLevel) {
-        return new WebResponse<R>(String.valueOf(status.getValue()), status.getMessage(), data, messageLevel.name().toLowerCase());
+        return new WebResponse<R>(status.getValue(), status.getMessage(), data, messageLevel.name().toLowerCase());
     }
 
     /**
@@ -115,7 +115,7 @@ public class WebResponse<R> extends BaseWebResponse implements Serializable {
      * @param <R>
      */
     public static <R> WebResponse<R> of(HttpStatus status, String message, R data, BaseWebResponse.MessageLevel messageLevel) {
-        return new WebResponse<R>(String.valueOf(status.getValue()), message, data, messageLevel.name().toLowerCase());
+        return new WebResponse<R>(status.getValue(), message, data, messageLevel.name().toLowerCase());
     }
 
 
