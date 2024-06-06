@@ -1,13 +1,23 @@
 package com.wvframework.utils;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
+import jdk.nashorn.internal.runtime.URIUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -18,35 +28,85 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileUtils {
 
+    private static Logger log = LoggerFactory.getLogger(FileUtils.class);
+
     /**
      * java环境的临时目录
      */
     public final static String JAVA_TEMP_DIR = System.getProperty("java.io.tmpdir");
 
+    /**
+     * classpath的目录
+     */
+    public static String CLASSPATH;
+
+    static {
+        URL resource = FileUtils.class.getClassLoader().getResource("");
+        if (resource == null) {
+            log.warn("ClassLoader resource is null");
+        } else {
+            try {
+                CLASSPATH = Paths.get(resource.toURI()).toString();
+            } catch (URISyntaxException e) {
+                log.error("resource(URL) to URI fail,resource:{}",resource, e);
+            }
+        }
+    }
+
 
     /**
-     * 将文件转化为输入流，支持读取classpath文件夹下的文件
-     * 例如对于文件resource/template/index.html =>入参： basePath="classpath:", morePath="template/index.html"，当然你也可以
-     * 只传一个参数 basePath="classpath:template/index.html"。
-     *
-     * classpath：只会到当前项目classpath路径中查找找文件。
-     * classpath*：不仅包含当前项目classpath路径，还包括三方jar中的classpath路径
-     * @param basePath 基础路径
-     * @param morePath 更多路径
+     * 根据传入的路径获取文件
+     * @param basePath
+     * @param morePath
      * @return
      */
-    public static File read(String basePath, String... morePath) {
+    public static File get(String basePath, String... morePath) {
         Path path = Paths.get(basePath, morePath);
-        if(path.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
-            ClassPathResource classPathResource = new ClassPathResource(path.subpath(1, path.getNameCount()).toString(), ClassUtils.getDefaultClassLoader());
-            try {
-                return classPathResource.getFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return path.toFile();
+        return path.toFile();
+    }
+
+    /**
+     *
+     * @param antStylePath
+     * @return
+     */
+    public static List<File> getMatched(String antStylePath){
+        return getMatched(antStylePath,null);
+    }
+
+    /**
+     * 传入一个可匹配的路径，获取符合条件的文件集合，例如: classpath:mappers/*Mapper.xml
+     * @param antStylePath 一个模糊的路径，可以匹配多个具体的路径
+     * @param filter 文件过滤器
+     * @return
+     */
+    public static List<File> getMatched(String antStylePath, Predicate<File> filter){
+        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        try {
+            Resource[] resources = resourcePatternResolver.getResources(antStylePath);
+            return Arrays.stream(resources).filter(Resource::exists).filter(Resource::isFile).map(r -> {
+                try {
+                    return r.getFile();
+                } catch (IOException e) {
+                    log.warn("resource getFile IOException,resource:{}",r);
+                }
+                return null;
+            }).filter(file -> file != null && (filter == null || filter.test(file))).collect(Collectors.toList());
+        } catch (IOException e) {
+            log.error("getMatched IOException,path:{}",antStylePath);
         }
+        return Collections.emptyList();
+    }
+
+    /**
+     * 解压文件集合，将结果写入到dest路径中
+     * @param srcFiles
+     * @param dest
+     * @return
+     */
+    public static File zipFiles(List<File> srcFiles, Path dest){
+        return null;
+
     }
 
 

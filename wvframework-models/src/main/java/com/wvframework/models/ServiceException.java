@@ -7,4 +7,5 @@ package com.wvframework.models;
  * @desc
  */
 public class ServiceException extends RuntimeException {
+
 }

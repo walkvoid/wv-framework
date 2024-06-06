@@ -25,7 +25,11 @@ public class SpringUtils implements ApplicationContextAware {
      * @param <T>
      */
     public static <T> T getBean(Class<T> requireType) {
-        return applicationContext.getBean(requireType);
+        if (applicationContext != null) {
+            return applicationContext.getBean(requireType);
+        } else {
+           throw new RuntimeException("Current is not spring environment");
+        }
     }
 
     /**

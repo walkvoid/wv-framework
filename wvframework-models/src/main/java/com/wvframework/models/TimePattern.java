@@ -26,5 +26,11 @@ public interface TimePattern {
      */
     String P4 = "yyyy年MM月dd日";
 
+    /**
+     * "yyyyMMddHHmmssSSS
+     */
+    String P5 = "yyyyMMddHHmmssSSS";
+
+
 
 }
