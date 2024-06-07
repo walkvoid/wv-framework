@@ -5,7 +5,10 @@ import com.wvframework.utils.spi.SnowFlake;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author jiangjunqing
@@ -49,9 +52,15 @@ public class IDGenerateUtils {
         }
     }
 
+    /**
+     * 默认的雪花算法实现
+     *
+     */
     private static class DefaultSnowFlake implements SnowFlake {
+
+
         /**
-         * 起始的时间戳
+         * 起始的时间戳 2024-01-01
          */
         private final static long START_TIMESTAMP = 1704038400000L;
 
@@ -82,7 +91,8 @@ public class IDGenerateUtils {
         private long lastTimestamp = -1L;//上一次时间戳
 
         public static DefaultSnowFlake build() {
-            return new DefaultSnowFlake(1L,2L);
+            int identify = randomIdentify();
+            return new DefaultSnowFlake((identify>>5) & 0x1f,identify & 0x1f);
         }
 
         public DefaultSnowFlake(long datacenterId, long machineId) {
@@ -118,6 +128,7 @@ public class IDGenerateUtils {
                 sequence = (sequence + 1) & MAX_SEQUENCE;
                 //同一毫秒的序列数已经达到最大
                 if (sequence == 0L) {
+                    System.out.println("同一毫秒内，序列号已经到了最大");
                     currStmp = getNextMill();
                 }
             } else {
@@ -143,6 +154,24 @@ public class IDGenerateUtils {
 
         private long getNewstmp() {
             return System.currentTimeMillis();
+        }
+
+        private static int randomIdentify() {
+            int hash = UUID.randomUUID().hashCode();
+            return  (hash ^ (hash>>>16)) & 1023;
+        }
+    }
+
+    public static void main(String[] args) {
+        int count = 0;
+        Set<Long> sets = new HashSet<>(1024);
+        for (int i = 0; i < 100000; i++) {
+            Long snowflakeId = IDGenerateUtils.getSnowflakeId();
+            if (sets.contains(snowflakeId)) {
+                System.out.println("snowflakeId duplicate:"+snowflakeId+",count:"+count++);
+            }else {
+                sets.add(snowflakeId);
+            }
         }
     }
 }
