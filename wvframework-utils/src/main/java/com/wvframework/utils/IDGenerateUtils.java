@@ -20,6 +20,8 @@ public class IDGenerateUtils {
 
     private final static DateTimeFormatter DF = DateTimeFormatter.ofPattern(TimePattern.P5);
 
+    private static SnowFlake  SNOWFLAKE;
+
     private IDGenerateUtils() {}
 
     /**
@@ -44,12 +46,17 @@ public class IDGenerateUtils {
      * @return
      */
     public static Long getSnowflakeId(){
-        ServiceLoader<SnowFlake> load = ServiceLoader.load(SnowFlake.class);
-        if (load.iterator().hasNext()) {
-            return load.iterator().next().nextId();
-        } else {
-            return DefaultSnowFlake.build().nextId();
+        if (SNOWFLAKE == null) {
+            synchronized (IDGenerateUtils.class) {
+                ServiceLoader<SnowFlake> load = ServiceLoader.load(SnowFlake.class);
+                if (load.iterator().hasNext()) {
+                    SNOWFLAKE =  load.iterator().next();
+                } else {
+                    SNOWFLAKE =  DefaultSnowFlake.getInstance();
+                }
+            }
         }
+        return SNOWFLAKE.nextId();
     }
 
     /**
@@ -90,12 +97,19 @@ public class IDGenerateUtils {
         private long sequence = 0L; //序列号
         private long lastTimestamp = -1L;//上一次时间戳
 
-        public static DefaultSnowFlake build() {
+        private static DefaultSnowFlake INSTANCE;
+
+        static {
             int identify = randomIdentify();
-            return new DefaultSnowFlake((identify>>5) & 0x1f,identify & 0x1f);
+            INSTANCE = new DefaultSnowFlake((identify>>5) & 0x1f,identify & 0x1f);
         }
 
-        public DefaultSnowFlake(long datacenterId, long machineId) {
+        public static DefaultSnowFlake getInstance(){
+            return INSTANCE;
+        }
+
+
+        private DefaultSnowFlake(long datacenterId, long machineId) {
             if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
                 throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
             }
@@ -128,7 +142,7 @@ public class IDGenerateUtils {
                 sequence = (sequence + 1) & MAX_SEQUENCE;
                 //同一毫秒的序列数已经达到最大
                 if (sequence == 0L) {
-                    System.out.println("同一毫秒内，序列号已经到了最大");
+
                     currStmp = getNextMill();
                 }
             } else {
