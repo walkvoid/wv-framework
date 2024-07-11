@@ -1,6 +1,5 @@
 package com.wvframework.utils;
 
-import jdk.nashorn.internal.runtime.URIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -16,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 
@@ -66,6 +68,16 @@ public class FileUtils {
     }
 
     /**
+     * 生成随机的文件夹
+     * @return
+     */
+    public static Path generateRandomDict(){
+        Path path = Paths.get(JAVA_TEMP_DIR, IDGenerateUtils.getUUID());
+        createDirectoryIfNotExist(path.toString());
+        return path;
+    }
+
+    /**
      *
      * @param antStylePath
      * @return
@@ -81,32 +93,88 @@ public class FileUtils {
      * @return
      */
     public static List<File> getMatched(String antStylePath, Predicate<File> filter){
-        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-        try {
-            Resource[] resources = resourcePatternResolver.getResources(antStylePath);
-            return Arrays.stream(resources).filter(Resource::exists).filter(Resource::isFile).map(r -> {
-                try {
-                    return r.getFile();
-                } catch (IOException e) {
-                    log.warn("resource getFile IOException,resource:{}",r);
-                }
-                return null;
-            }).filter(file -> file != null && (filter == null || filter.test(file))).collect(Collectors.toList());
-        } catch (IOException e) {
-            log.error("getMatched IOException,path:{}",antStylePath);
-        }
+//        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+//        try {
+//            Resource[] resources = resourcePatternResolver.getResources(antStylePath);
+//            return Arrays.stream(resources).filter(Resource::exists).filter(Resource::isFile).map(r -> {
+//                try {
+//                    return r.getFile();
+//                } catch (IOException e) {
+//                    log.warn("resource getFile IOException,resource:{}",r);
+//                }
+//                return null;
+//            }).filter(file -> file != null && (filter == null || filter.test(file))).collect(Collectors.toList());
+//        } catch (IOException e) {
+//            log.error("getMatched IOException,path:{}",antStylePath);
+//        }
         return Collections.emptyList();
+    }
+
+    public static List<File> unzip(Path zipFilePath, Path destDict) throws Exception {
+        createDirectoryIfNotExist(destDict.toString());
+        ZipInputStream zipInputStream = new ZipInputStream((new FileInputStream(zipFilePath.toFile())));
+        ZipEntry zipentry;
+        List<File> result = CollectionUtils.newArrayList();
+        while ((zipentry = zipInputStream.getNextEntry()) != null) {
+            if (!zipentry.isDirectory()) {
+                File file = destDict.resolve(zipentry.getName()).toFile();
+                copy(zipInputStream, file);
+                zipInputStream.closeEntry();
+                result.add(file);
+            }
+        }
+        return result;
+    }
+
+    public static List<File> unzip(Path zipFilePath) throws Exception {
+        return unzip(zipFilePath, zipFilePath.getParent());
+    }
+
+
+    /**
+     * 解压文件集合，将结果写入到dest路径中
+     * @param srcFiles
+     * @param destFilePath
+     * @param convertor
+     * @return
+     */
+    public static File zip(List<String> srcFiles, Path destFilePath, Function<String, String> convertor){
+        ZipOutputStream zos = null;
+        try {
+            createDirectoryIfNotExist(destFilePath.getParent().toString());
+            zos = new ZipOutputStream(new FileOutputStream(destFilePath.toString()));
+           if (convertor == null) {
+               convertor = Function.identity();
+           }
+            for (String filePath : srcFiles) {
+                String[] splitFileName = splitFileName(Paths.get(filePath).normalize().getFileName().toString());
+                String newFileName = convertor.apply(splitFileName[0]) + "." + splitFileName[1];
+                zos.putNextEntry(new ZipEntry(newFileName));
+                copy(new FileInputStream(filePath), zos);
+                zos.closeEntry();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (zos != null) {
+                    zos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return destFilePath.toFile();
     }
 
     /**
      * 解压文件集合，将结果写入到dest路径中
      * @param srcFiles
-     * @param dest
+     * @param
      * @return
      */
-    public static File zipFiles(List<File> srcFiles, Path dest){
-        return null;
-
+    public static File zip(List<String> srcFiles, String zipFileName){
+        return zip(srcFiles, generateRandomDict().resolve(zipFileName), null);
     }
 
 
@@ -114,10 +182,10 @@ public class FileUtils {
      * 如果不存在就创建文件夹
      * @param path
      */
-    public void createDirectoryIfNotExist(String path){
+    public static void createDirectoryIfNotExist(String path){
         File file = new File(path);
         if (!file.exists()) {
-            file.mkdir();
+            file.mkdirs();
         }
     }
 
@@ -185,6 +253,18 @@ public class FileUtils {
     }
 
     /**
+     * 分离文件名
+     * @return
+     */
+    public static String[] splitFileName(String fileName){
+        if (StringUtils.isEmpty(fileName)) {
+            throw new IllegalArgumentException();
+        }
+        int lastIndexOf = fileName.lastIndexOf(".");
+        return new String[]{fileName.substring(0, lastIndexOf), fileName.substring(lastIndexOf)};
+    }
+
+    /**
      * 保存字符串内容到文件中
      * @param dest 读取文件的路径，包含了文件目录和文件名，一般采用Paths.of(fileParentDict，fileName的方式构造)
      */
@@ -218,9 +298,6 @@ public class FileUtils {
                 }
             }
         }
-
-
-
     }
 
 
@@ -242,15 +319,19 @@ public class FileUtils {
         return nread;
     }
 
-    public static void main(String[] args) throws Exception {
-        ArrayList<String> strings = CollectionUtils.newArrayList("D:\\lls\\jiangjunqing\\Desktop\\whatisai.pdf",
-                "D:\\lls\\jiangjunqing\\Desktop\\fapiao1.jpg", "D:\\lls\\jiangjunqing\\Desktop\\fapiao2.jpg");
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("D:\\lls\\jiangjunqing\\Desktop\\xxxx.zip")));
-        for (String filePath : strings) {
-            File file = new File(filePath);
-            zos.putNextEntry(new ZipEntry(file.getName()));
-            zos.closeEntry();
-        }
-        zos.close();
+    /**
+     * 输入流拷贝到文件
+     * @param source
+     * @param dest
+     * @return
+     * @throws IOException
+     */
+    public static long copy(InputStream source, File dest) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(dest);
+        return copy(source, fileOutputStream);
+    }
+
+    public static void main(String[] args) {
+        Paths.get("xx").resolve("xx");
     }
 }

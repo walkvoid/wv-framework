@@ -42,6 +42,14 @@ public class IDGenerateUtils {
     }
 
     /**
+     * 生成yyyyMMddHHmmssSSS型式的Id
+     * @return
+     */
+    public static String getUUID(){
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
+    /**
      * 生成雪花Id
      * @return
      */
