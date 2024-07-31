@@ -8,10 +8,23 @@
         <version>${revision}</version>
     </parent>
 
-
     <artifactId>wvframework-web-starter</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wvframework</groupId>
+            <artifactId>wvframework-validation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wvframework</groupId>
+            <artifactId>wvframework-excel</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
