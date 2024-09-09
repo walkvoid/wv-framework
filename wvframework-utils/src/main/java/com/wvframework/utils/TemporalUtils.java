@@ -1,5 +1,7 @@
 package com.wvframework.utils;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -7,10 +9,9 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.time.temporal.TemporalQueries;
+import java.time.temporal.TemporalQuery;
+import java.util.*;
 
 /**
  * @author walkvoid
@@ -18,44 +19,40 @@ import java.util.List;
  */
 public class TemporalUtils {
 
+    private static Map<String, String> replaceMap;
+    private static List<String> patterns;
+    private static Map<Class<? extends TemporalAccessor>, TemporalQuery<?>> supportMap;
+
 
     private TemporalUtils(){}
 
+    static {
+        replaceMap = new HashMap<>(8);
+        replaceMap.putIfAbsent("-", "");
+        replaceMap.putIfAbsent("/", "");
+        replaceMap.putIfAbsent(":", "");
+        replaceMap.putIfAbsent("T", " ");
+        replaceMap.putIfAbsent(".", "");
 
+        patterns = new ArrayList<>();
+        patterns.add("yyyy");
+        patterns.add("yyyyMM");
+        patterns.add("yyyyMMdd");
+        patterns.add("yyyyMMdd HHmmss");
+        patterns.add("yyyyMMdd HHmmssSSS");
+        patterns.add("HHmmss");
+        patterns.add("HHmmssSSS");
 
-    public static void main(String[] args) {
-        OffsetDateTime now = OffsetDateTime.now();
-        System.out.println(now);
-        //20240905135436283
-        TemporalAccessor yyyyMM = DateTimeFormatter.ofPattern("yyyyMMdd HHmmssSSS").parse("20240905 135436283");
-        System.out.println(yyyyMM);
-        Arrays.asList("yyyy","yyyyMM","yyyyMMdd","yyyyMMdd HHmmss","yyyyMMdd HHmmssSSS");
-        HashMap<String, String> map = new HashMap<>();
-        map.putIfAbsent("-", "");
-        map.putIfAbsent("/", "");
-        map.putIfAbsent(":", "");
-        map.putIfAbsent("T", " ");
-        map.putIfAbsent(".", "");
-        String xx = "2024-09-05T14:13:06.223";
-        map.entrySet().stream().forEach(entry-> xx.replace(entry.getKey(), entry.getValue()));
-
-
+        supportMap = new HashMap<>(8);
+        supportMap.put(Year.class, (temporal) -> temporal.query(Year::from));
+        supportMap.put(YearMonth.class, (temporal) -> temporal.query(YearMonth::from));
+        supportMap.put(LocalDate.class, (temporal) -> temporal.query(LocalDate::from));
+        supportMap.put(LocalDateTime.class, (temporal) -> temporal.query(LocalDateTime::from));
+        supportMap.put(LocalTime.class, (temporal) -> temporal.query(LocalTime::from));
     }
 
 
 
-
-    /**
-     * 解析一个时间字符串
-     * @param content
-     * @return
-     */
-    public static Temporal parse(String content) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        ZoneOffset of = ZoneOffset.of(zoneId.getId());
-
-        return null;
-    }
 
     /**
      * 解析一个字符串,并可以指定期望的类型
@@ -65,11 +62,7 @@ public class TemporalUtils {
      * @return
      */
     public static <T extends TemporalAccessor> T parse(String content, Class<T> except) {
-
-
-
-
-        return null;
+        return parse(content, except, CompatibleMode.CURRENT);
     }
 
     /**
@@ -80,30 +73,74 @@ public class TemporalUtils {
      * @return
      */
     public static <T extends TemporalAccessor> T parse(String content, Class<T> except, CompatibleMode mode) {
+        List<String> patterns = deducePattern(content);
+        return parse(content, except);
+    }
 
+    /**
+     * 指定一个时间字符串和格式,返回期望类型的时间
+     * @param content
+     * @param except
+     * @param <T>
+     * @return
+     */
+    public static <T extends TemporalAccessor> T parse(String content, String pattern, Class<T> except) {
 
+        List<String> patterns = deducePattern(content);
+        return parse(content, except);
+    }
 
+    /**
+     * 指定一个时间字符串和格式,返回期望类型的时间
+     * @param content
+     * @param except
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends TemporalAccessor> T parse(String content, String pattern, Class<T> except, CompatibleMode mode) {
+        if (content == null || content.isEmpty()) {
+            throw new IllegalArgumentException("content can not be empty.");
+        }
+        if (pattern == null || pattern.isEmpty()) {
+            throw new IllegalArgumentException("pattern can not be empty.");
+        }
+        if (except == null) {
+            throw new IllegalArgumentException("except can not be null.");
+        }
+        if (mode == null) {
+            throw new IllegalArgumentException("mode can not be null.");
+        }
+        TemporalAccessor temporalAccessor = DateTimeFormatter.ofPattern(pattern).parse(content);
+        if (except.equals(temporalAccessor.getClass())) {
+            return (T)temporalAccessor;
+        } else {
+           return Convertors.convert(temporalAccessor, except, mode);
+        }
+    }
+
+    private static List<String> deducePattern(String content) {
         return null;
     }
 
     /**
      * 解析一个字符串,并可以指定日期格式和指定期望的类型
      * @param content
-     * @param pattern
+     * @param patterns
      * @param except
      * @param <T>
      * @return
      */
-    public static <T extends TemporalAccessor> T parse(String content, String pattern, Class<T> except, CompatibleMode mode) {
+    private static <T extends TemporalAccessor> T parse(String content, List<String> patterns, Class<T> except, CompatibleMode mode) {
         if (content == null || content.isEmpty() || except == null) {
             throw new IllegalArgumentException("content and except class cant not be null.");
         }
         TemporalAccessor parse = null;
-        if (pattern == null || pattern.isEmpty()) {
-
-        } else {
-            parse = DateTimeFormatter.ofPattern(pattern).parse(content);
-        }
+//        if (pattern == null || pattern.isEmpty()) {
+//
+//        } else {
+//            parse = DateTimeFormatter.ofPattern(pattern).parse(content);
+//        }
 
         if (parse == null) {
             throw new DateTimeException("parse " + content + " fail, parse result is null.");
@@ -135,6 +172,7 @@ public class TemporalUtils {
             registerConvertors();
         }
         static <T extends TemporalAccessor> T convert(TemporalAccessor source, Class<T> except, CompatibleMode mode) {
+
             //find matched Convertor
             @SuppressWarnings("unchecked")
             Convertor matched = null;
@@ -325,5 +363,32 @@ public class TemporalUtils {
         }
     }
 
+
+    public static void main(String[] args) {
+//        OffsetDateTime now = OffsetDateTime.now();
+//        System.out.println(now);
+//        //20240905135436283
+//        TemporalAccessor yyyyMM = DateTimeFormatter.ofPattern("yyyyMMdd HHmmssSSS").parse("20240905 135436283");
+//        System.out.println(yyyyMM);
+//        Arrays.asList("yyyy","yyyyMM","yyyyMMdd","yyyyMMdd HHmmss","yyyyMMdd HHmmssSSS");
+//        HashMap<String, String> map = new HashMap<>();
+//        map.putIfAbsent("-", "");
+//        map.putIfAbsent("/", "");
+//        map.putIfAbsent(":", "");
+//        map.putIfAbsent("T", " ");
+//        map.putIfAbsent(".", "");
+//        String xx = "2024-09-05T14:13:06.223";
+//        map.entrySet().stream().forEach(entry-> xx.replace(entry.getKey(), entry.getValue()));
+
+        //LocalDateTime parse = parse("2024-09-09", "yyyy-MM-dd", LocalDateTime.class, CompatibleMode.CURRENT);
+
+        TemporalAccessor parse1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").parse("2024-09-09 19:07:40");
+        //TemporalAccessor parse1 = DateTimeFormatter.ofPattern("HH:mm:ss").parse("19:07:40");
+
+        //parse1.isSupported()
+        YearMonth query = (YearMonth) parse1.query(supportMap.get(YearMonth.class));
+        System.out.println(query);
+
+    }
 
 }
