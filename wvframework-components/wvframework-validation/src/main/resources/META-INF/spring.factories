@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.wvframework.validation.ValidationAutoConfiguration
+com.github.walkvoid.wvframework.validation.ValidationAutoConfiguration
