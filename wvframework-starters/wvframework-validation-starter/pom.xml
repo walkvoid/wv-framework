@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.wvframework</groupId>
+        <groupId>com.github.walkvoid.wvframework</groupId>
         <artifactId>wvframework-starters</artifactId>
         <version>${revision}</version>
     </parent>
@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.wvframework</groupId>
+            <groupId>com.github.walkvoid.wvframework</groupId>
             <artifactId>wvframework-validation</artifactId>
             <version>${project.version}</version>
         </dependency>

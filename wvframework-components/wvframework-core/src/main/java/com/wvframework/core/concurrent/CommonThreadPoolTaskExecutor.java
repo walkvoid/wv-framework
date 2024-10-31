@@ -14,8 +14,49 @@ import java.util.concurrent.Future;
  * @date 2024/6/25
  * @desc
  */
-public class TraceableThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
+public class CommonThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
+
+
+
+    @Override
+    public void setCorePoolSize(int corePoolSize) {
+        if (corePoolSize<0){
+            corePoolSize=2;
+        }
+        super.setCorePoolSize(corePoolSize);
+
+    }
+
+    @Override
+    public int getMaxPoolSize() {
+        return super.getMaxPoolSize();
+    }
+
+    @Override
+    public void setKeepAliveSeconds(int keepAliveSeconds) {
+        super.setKeepAliveSeconds(keepAliveSeconds);
+    }
+
+    @Override
+    public void setQueueCapacity(int queueCapacity) {
+        super.setQueueCapacity(queueCapacity);
+    }
+
+    @Override
+    public void setAllowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
+        super.setAllowCoreThreadTimeOut(allowCoreThreadTimeOut);
+    }
+
+    @Override
+    public void setPrestartAllCoreThreads(boolean prestartAllCoreThreads) {
+        super.setPrestartAllCoreThreads(prestartAllCoreThreads);
+    }
+
+    @Override
+    public void setTaskDecorator(TaskDecorator taskDecorator) {
+        super.setTaskDecorator(taskDecorator);
+    }
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
