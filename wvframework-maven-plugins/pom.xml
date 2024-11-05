@@ -4,11 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.walkvoid.wvframework</groupId>
-    <artifactId>wvframework-build</artifactId>
+    <artifactId>wvframework-maven-plugins</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
-    <description>Build wvframework projects.</description>
 
+    <dependencies>
+
+
+    </dependencies>
+
+    <build>
+
+    </build>
 
 
 </project>
