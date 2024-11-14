@@ -9,6 +9,11 @@
     <version>1.0.0</version>
     <description>Build wvframework projects.</description>
 
+    <modules>
+        <module>wvframework-dependencies</module>
+        <module>wvframework-parent</module>
+    </modules>
+
 
 
 </project>
