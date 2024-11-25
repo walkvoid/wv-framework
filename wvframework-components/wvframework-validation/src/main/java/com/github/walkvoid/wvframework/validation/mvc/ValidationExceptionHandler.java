@@ -27,8 +27,8 @@ public class ValidationExceptionHandler {
         String messages = bindingResult.getAllErrors()
                 .stream()
                 .map(ObjectError::getDefaultMessage)
-                .collect(Collectors.joining("；"));
-        return WebResponse.of(HttpStatus.BAD_REQUEST, messages, null, BaseWebResponse.MessageLevel.ERROR);
+                .collect(Collectors.joining(";"));
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
     }
 
     /**
@@ -39,8 +39,8 @@ public class ValidationExceptionHandler {
         String messages = e.getBindingResult().getAllErrors()
                 .stream()
                 .map(ObjectError::getDefaultMessage)
-                .collect(Collectors.joining("；"));
-        return WebResponse.of(HttpStatus.BAD_REQUEST, messages, null, BaseWebResponse.MessageLevel.ERROR);
+                .collect(Collectors.joining(";"));
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
     }
 
     /**
@@ -49,6 +49,6 @@ public class ValidationExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     public WebResponse<?> methodArgumentNotValid(ConstraintViolationException exception) {
         String messages = exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("；"));
-        return WebResponse.of(HttpStatus.BAD_REQUEST, messages, null, BaseWebResponse.MessageLevel.ERROR);
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
     }
 }

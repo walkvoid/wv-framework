@@ -13,4 +13,12 @@
     <version>${revision}</version>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+        </dependency>
+    </dependencies>
+
+
 </project>
