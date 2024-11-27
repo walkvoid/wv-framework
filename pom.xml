@@ -12,6 +12,7 @@
     <modules>
         <module>wvframework-dependencies</module>
         <module>wvframework-parent</module>
+        <module>wvframework-tests</module>
     </modules>
 
 

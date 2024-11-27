@@ -48,7 +48,7 @@ public class ValidationExceptionHandler {
      */
     @ExceptionHandler({ConstraintViolationException.class})
     public WebResponse<?> methodArgumentNotValid(ConstraintViolationException exception) {
-        String messages = exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("；"));
+        String messages = exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
         return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
     }
 }

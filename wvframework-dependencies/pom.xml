@@ -49,6 +49,12 @@
            </dependency>
 
            <dependency>
+               <groupId>com.github.walkvoid.wvframework</groupId>
+               <artifactId>wvframework-utils</artifactId>
+               <version>${project.version}</version>
+           </dependency>
+
+           <dependency>
                <groupId>org.apache.dubbo</groupId>
                <artifactId>dubbo-spring-boot-starter</artifactId>
                <version>${dubbo.version}</version>
