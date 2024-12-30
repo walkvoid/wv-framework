@@ -7,44 +7,24 @@ package com.github.walkvoid.wvframework.models;
  * @date 2023/10/13
  * @desc 基础的webResponse,包含了一个供前端使用的消息等级，不建议在业务controller中直接使用此类
  */
-public class BaseWebResponse extends Traceable {
-    private static final long serialVersionUID = -4405513283022040676L;
+public interface BaseWebResponse extends Traceable {
 
-    protected Integer code;
+    Integer getCode();
 
-    protected String message;
+    void setCode(Integer code);
 
-    /**
-     * msg的消息等级，需要和前端配合使用
-     */
-    private String messageLevel;
+    String getMessage();
 
-    protected BaseWebResponse(Integer code, String message, String messageLevel) {
-        this.code = code;
-        this.message = message;
-        this.messageLevel = messageLevel;
-    }
+    void setMessage(String message);
 
-    public Integer getCode() {
-        return code;
-    }
+    String getMessageLevel();
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    void setMessageLevel(String messageLevel);
 
     /**
      * 给前端用户的提示消息等级
      */
-    public enum MessageLevel {
+    enum MessageLevel {
 
         /**
          * 响应成功，前端用户不需要看到任何提示信息
@@ -67,11 +47,5 @@ public class BaseWebResponse extends Traceable {
         ERROR,
     }
 
-    public String getMessageLevel() {
-        return messageLevel;
-    }
 
-    public void setMessageLevel(String messageLevel) {
-        this.messageLevel = messageLevel;
-    }
 }

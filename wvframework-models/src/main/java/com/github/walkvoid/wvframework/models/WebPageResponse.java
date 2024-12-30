@@ -1,6 +1,5 @@
 package com.github.walkvoid.wvframework.models;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,14 +7,20 @@ import java.util.List;
  * @date 2023/9/18
  * @desc 分页响应体，R（Result）：结果类型
  */
-public class WebPageResponse<R> extends BaseWebResponse implements Serializable {
+public class WebPageResponse<R> extends PageResponse<R> implements BaseWebResponse {
     private static final long serialVersionUID = -424577018334183404L;
 
-    private List<R> data;
+    private Integer code;
+
+    private String message;
+
+    private String messageLevel;
+
 
     public WebPageResponse(Integer code, String message, List<R> data, String messageLevel) {
-        super(code, message, messageLevel);
-        this.data = data;
+        this.code = code;
+        this.message = message;
+        this.messageLevel = messageLevel;
     }
 
     /**
@@ -95,4 +100,35 @@ public class WebPageResponse<R> extends BaseWebResponse implements Serializable 
     public static <R> WebPageResponse<R> of(HttpStatus status, List<R> data, BaseWebResponse.MessageLevel messageLevel) {
         return new WebPageResponse<R>(status.getValue(), status.getMessage(), data, messageLevel.name().toLowerCase());
     }
+
+    @Override
+    public Integer getCode() {
+        return code;
+    }
+
+    @Override
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String getMessageLevel() {
+        return messageLevel;
+    }
+
+    @Override
+    public void setMessageLevel(String messageLevel) {
+        this.messageLevel = messageLevel;
+    }
+
 }

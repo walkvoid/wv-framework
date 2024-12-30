@@ -8,7 +8,7 @@ import javax.validation.groups.Default;
  * @description:
  * @version:
  */
-public interface BaseValidationGroups {
+public interface ValidationGroups {
 
     Class<?> dx = Default.class;
 
