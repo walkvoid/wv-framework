@@ -8,30 +8,33 @@ import java.util.List;
  * @description:
  * @version:
  */
-public class PageResponse<R> implements Traceable {
+class PageResponse<R> {
 
-    private String traceId;
-
+    /**
+     * total data count
+     */
     protected Long total ;
 
+    /**
+     * page size
+     */
     protected Integer size;
 
+    /**
+     * current page index
+     */
     protected Long current;
 
+    /**
+     * data of one page
+     */
     private List<R> data;
 
-    private Boolean ignoreCount;
-
-    private Tuple2<String, String> sorts;
-
-    @Override
-    public String getTraceId() {
-        return traceId;
-    }
-
-    @Override
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
+    protected PageResponse(Long total, Integer size, Long current, List<R> data) {
+        this.total = total;
+        this.size = size;
+        this.current = current;
+        this.data = data;
     }
 
     public Long getTotal() {

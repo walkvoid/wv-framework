@@ -7,8 +7,10 @@ import java.util.List;
  * @date 2023/9/18
  * @desc 分页响应体，R（Result）：结果类型
  */
-public class WebPageResponse<R> extends PageResponse<R> implements BaseWebResponse {
+public class WebPageResponse<R> extends PageResponse<R> implements Traceable {
     private static final long serialVersionUID = -424577018334183404L;
+
+    private String traceId;
 
     private Integer code;
 
@@ -18,6 +20,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
 
 
     public WebPageResponse(Integer code, String message, List<R> data, String messageLevel) {
+        super(0L,0,0L,data);
         this.code = code;
         this.message = message;
         this.messageLevel = messageLevel;
@@ -30,7 +33,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @param <R>
      */
     public static <R> WebPageResponse<R> ok(List<R> data) {
-        return of(HttpStatus.OK, data, BaseWebResponse.MessageLevel.SILENT);
+        return of(HttpStatus.OK, data, MessageLevel.SILENT);
     }
 
     /**
@@ -40,7 +43,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @param <R>
      */
     public static <R> WebPageResponse<R> info(List<R> data, String message) {
-        return of(HttpStatus.OK.getValue(), message, data, BaseWebResponse.MessageLevel.INFO);
+        return of(HttpStatus.OK.getValue(), message, data, MessageLevel.INFO);
     }
 
     /**
@@ -50,7 +53,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @param <R>
      */
     public static <R> WebPageResponse<R> warning(List<R> data, String message) {
-        return of(HttpStatus.OK.getValue(), message, data, BaseWebResponse.MessageLevel.WARNING);
+        return of(HttpStatus.OK.getValue(), message, data, MessageLevel.WARNING);
     }
 
     /**
@@ -60,7 +63,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @param <R>
      */
     public static <R> WebPageResponse<R> error(List<R> data) {
-        return of(HttpStatus.INTERNAL_SERVER_ERROR, data, BaseWebResponse.MessageLevel.ERROR);
+        return of(HttpStatus.INTERNAL_SERVER_ERROR, data, MessageLevel.ERROR);
     }
 
     /**
@@ -85,7 +88,7 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @return
      * @param <R>
      */
-    public static <R> WebPageResponse<R> of(Integer code, String message, List<R> data, BaseWebResponse.MessageLevel messageLevel) {
+    public static <R> WebPageResponse<R> of(Integer code, String message, List<R> data, MessageLevel messageLevel) {
         return new WebPageResponse<R>(code, message, data, messageLevel.name().toLowerCase());
     }
 
@@ -97,38 +100,41 @@ public class WebPageResponse<R> extends PageResponse<R> implements BaseWebRespon
      * @return
      * @param <R>
      */
-    public static <R> WebPageResponse<R> of(HttpStatus status, List<R> data, BaseWebResponse.MessageLevel messageLevel) {
+    public static <R> WebPageResponse<R> of(HttpStatus status, List<R> data, MessageLevel messageLevel) {
         return new WebPageResponse<R>(status.getValue(), status.getMessage(), data, messageLevel.name().toLowerCase());
     }
 
     @Override
+    public String getTraceId() {
+        return this.traceId;
+    }
+
+    @Override
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
+
     public Integer getCode() {
         return code;
     }
 
-    @Override
     public void setCode(Integer code) {
         this.code = code;
     }
 
-    @Override
     public String getMessage() {
         return message;
     }
 
-    @Override
     public void setMessage(String message) {
         this.message = message;
     }
 
-    @Override
     public String getMessageLevel() {
         return messageLevel;
     }
 
-    @Override
     public void setMessageLevel(String messageLevel) {
         this.messageLevel = messageLevel;
     }
-
 }
