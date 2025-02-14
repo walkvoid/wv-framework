@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-parent</artifactId>
+        <artifactId>wvframework-dependencies</artifactId>
         <version>${revision}</version>
-        <relativePath>../wvframework-parent/pom.xml</relativePath>
+        <relativePath>../wvframework-dependencies/pom.xml</relativePath>
     </parent>
 
     <artifactId>wvframework-annotations</artifactId>
