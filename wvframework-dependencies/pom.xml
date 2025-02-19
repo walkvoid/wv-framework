@@ -16,7 +16,9 @@
         <jackson.version>2.13.5</jackson.version>
         <spring.version>5.3.31</spring.version>
         <spring-boot.version>2.7.18</spring-boot.version>
-        <dubbo.version>2.7.23</dubbo.version>
+        <dubbo-spring-boot-starter.version>2.7.23</dubbo-spring-boot-starter.version>
+        <springfox-spring-boot-starter.version>3.0.0</springfox-spring-boot-starter.version>
+        <mybatis-spring-boot-starter.version>3.5.8</mybatis-spring-boot-starter.version>
 
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
@@ -53,11 +55,21 @@
                <artifactId>wvframework-utils</artifactId>
                <version>${project.version}</version>
            </dependency>
+           <dependency>
+               <groupId>com.github.walkvoid.wvframework</groupId>
+               <artifactId>wvframework-models</artifactId>
+               <version>${project.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>com.github.walkvoid.wvframework</groupId>
+               <artifactId>wvframework-annotations</artifactId>
+               <version>${project.version}</version>
+           </dependency>
 
            <dependency>
                <groupId>org.apache.dubbo</groupId>
                <artifactId>dubbo-spring-boot-starter</artifactId>
-               <version>${dubbo.version}</version>
+               <version>${dubbo-spring-boot-starter.version}</version>
                <exclusions>
                    <exclusion>
                        <groupId>org.apache.logging.log4j</groupId>
@@ -69,9 +81,22 @@
                    </exclusion>
                </exclusions>
            </dependency>
-       </dependencies>
 
-   </dependencyManagement>
+           <dependency>
+               <groupId>io.springfox</groupId>
+               <artifactId>springfox-boot-starter</artifactId>
+               <version>${springfox-spring-boot-starter.version}</version>
+           </dependency>
+
+           <dependency>
+               <groupId>com.baomidou</groupId>
+               <artifactId>mybatis-plus-boot-starter</artifactId>
+               <version>${mybatis-spring-boot-starter.version}</version>
+           </dependency>
+       </dependencies>
+    </dependencyManagement>
+
+
 
     <build>
         <pluginManagement>
