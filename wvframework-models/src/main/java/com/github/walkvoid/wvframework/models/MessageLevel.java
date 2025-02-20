@@ -3,7 +3,7 @@ package com.github.walkvoid.wvframework.models;
     /**
      * 给前端用户的提示消息等级
      */
-enum MessageLevel {
+public enum MessageLevel {
 
     /**
      * 响应成功，前端用户不需要看到任何提示信息

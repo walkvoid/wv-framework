@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.validation.mvc;
 
-import com.github.walkvoid.wvframework.models.BaseWebResponse;
 import com.github.walkvoid.wvframework.models.HttpStatus;
+import com.github.walkvoid.wvframework.models.MessageLevel;
 import com.github.walkvoid.wvframework.models.WebResponse;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -28,7 +28,7 @@ public class ValidationExceptionHandler {
                 .stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ValidationExceptionHandler {
                 .stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
     }
 
     /**
@@ -49,6 +49,6 @@ public class ValidationExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     public WebResponse<?> methodArgumentNotValid(ConstraintViolationException exception) {
         String messages = exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, BaseWebResponse.MessageLevel.ERROR);
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
     }
 }
