@@ -18,6 +18,10 @@
             <artifactId>spring-boot-starter</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.walkvoid.wvframework</groupId>
+            <artifactId>wvframework-utils</artifactId>
+        </dependency>
     </dependencies>
 
 

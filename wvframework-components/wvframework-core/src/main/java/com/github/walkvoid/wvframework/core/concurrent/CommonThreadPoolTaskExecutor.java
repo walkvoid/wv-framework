@@ -1,4 +1,4 @@
-package com.wvframework.core.concurrent;
+package com.github.walkvoid.wvframework.core.concurrent;
 
 import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,15 +17,12 @@ import java.util.concurrent.Future;
 public class CommonThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
 
-
-
     @Override
     public void setCorePoolSize(int corePoolSize) {
         if (corePoolSize<0){
             corePoolSize=2;
         }
         super.setCorePoolSize(corePoolSize);
-
     }
 
     @Override
@@ -55,7 +52,11 @@ public class CommonThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
     @Override
     public void setTaskDecorator(TaskDecorator taskDecorator) {
-        super.setTaskDecorator(taskDecorator);
+        if (taskDecorator == null) {
+            super.setTaskDecorator(new TraceableTaskDecorator());
+        }else {
+            super.setTaskDecorator(taskDecorator);
+        }
     }
 
     @Override
@@ -68,31 +69,16 @@ public class CommonThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
         @Override
         public Runnable decorate(Runnable runnable) {
-
             final String xx = MDC.get("xx");
-
             return () -> {
                 MDC.put("a", "b");
                 try {
                     runnable.run();
-
                 } finally {
                     MDC.clear();
                 }
             };
         }
-    }
-
-    /**
-     *
-     */
-    @ConfigurationProperties(prefix = "wvframework.trace")
-    public class TraceableProperties {
-
-        private String traceKey;
-
-        private Map<String, String> exts;
-
     }
 
 

@@ -6,7 +6,7 @@ package com.github.walkvoid.wvframework.models;
  * @date 2023/9/14
  * @desc web响应体
  */
-public class WebResponse<R> implements Traceable {
+public class WebResponse<R> implements BaseResponse<Integer,R>, Traceable {
     private static final long serialVersionUID = 2246851850352656128L;
 
     private Integer code;
@@ -121,6 +121,7 @@ public class WebResponse<R> implements Traceable {
         return new WebResponse<R>(status.getValue(), message, data, messageLevel.name().toLowerCase());
     }
 
+    @Override
     public Integer getCode() {
         return code;
     }
@@ -139,6 +140,7 @@ public class WebResponse<R> implements Traceable {
         this.traceId = traceId;
     }
 
+    @Override
     public String getMessage() {
         return message;
     }
@@ -155,6 +157,7 @@ public class WebResponse<R> implements Traceable {
         this.messageLevel = messageLevel;
     }
 
+    @Override
     public R getData() {
         return data;
     }

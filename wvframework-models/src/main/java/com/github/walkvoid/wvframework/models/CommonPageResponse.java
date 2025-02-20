@@ -8,7 +8,7 @@ import java.util.List;
  * @description:
  * @version:
  */
-public class CommonPageResponse<R> extends PageResponse<R> implements Traceable {
+public class CommonPageResponse<R> extends PageResponse<R> implements BaseResponse<String,List<R>>, Traceable {
     private static final long serialVersionUID = -9069349981489966401L;
 
     private String traceId;
@@ -40,7 +40,7 @@ public class CommonPageResponse<R> extends PageResponse<R> implements Traceable 
     public void setTraceId(String traceId) {
         this.traceId = traceId;
     }
-
+    @Override
     public String getCode() {
         return code;
     }
@@ -48,7 +48,7 @@ public class CommonPageResponse<R> extends PageResponse<R> implements Traceable 
     public void setCode(String code) {
         this.code = code;
     }
-
+    @Override
     public String getMessage() {
         return message;
     }
@@ -56,4 +56,10 @@ public class CommonPageResponse<R> extends PageResponse<R> implements Traceable 
     public void setMessage(String message) {
         this.message = message;
     }
+    @Override
+    public List<R> getData() {
+        return super.getData();
+    }
+
+
 }

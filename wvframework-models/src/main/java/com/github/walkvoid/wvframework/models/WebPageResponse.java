@@ -7,7 +7,7 @@ import java.util.List;
  * @date 2023/9/18
  * @desc 分页响应体，R（Result）：结果类型
  */
-public class WebPageResponse<R> extends PageResponse<R> implements Traceable {
+public class WebPageResponse<R> extends PageResponse<R> implements  BaseResponse<Integer,List<R>>, Traceable {
     private static final long serialVersionUID = -424577018334183404L;
 
     private String traceId;

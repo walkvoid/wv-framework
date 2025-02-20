@@ -6,7 +6,7 @@ package com.github.walkvoid.wvframework.models;
  * @description:
  * @version:
  */
-public class CommonResponse<R> implements Traceable {
+public class CommonResponse<R> implements BaseResponse<String, R>, Traceable {
     private static final long serialVersionUID = -4436287742766304519L;
 
     private String traceId;
@@ -38,6 +38,7 @@ public class CommonResponse<R> implements Traceable {
         return new CommonResponse<R>(code, message, data);
     }
 
+    @Override
     public String getCode() {
         return code;
     }
@@ -64,6 +65,7 @@ public class CommonResponse<R> implements Traceable {
         this.message = message;
     }
 
+    @Override
     public R getData() {
         return data;
     }

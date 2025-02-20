@@ -1,4 +1,4 @@
-package com.wvframework.core.concurrent;
+package com.github.walkvoid.wvframework.core.concurrent;
 
 /**
  * @author jiangjunqing
