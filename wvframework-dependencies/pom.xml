@@ -65,6 +65,11 @@
                <artifactId>wvframework-annotations</artifactId>
                <version>${project.version}</version>
            </dependency>
+           <dependency>
+               <groupId>com.github.walkvoid.wvframework</groupId>
+               <artifactId>wvframework-core</artifactId>
+               <version>${project.version}</version>
+           </dependency>
 
            <dependency>
                <groupId>org.apache.dubbo</groupId>

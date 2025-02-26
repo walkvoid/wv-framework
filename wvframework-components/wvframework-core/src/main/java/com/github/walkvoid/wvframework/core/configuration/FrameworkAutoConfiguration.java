@@ -3,6 +3,7 @@ package com.github.walkvoid.wvframework.core.configuration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author jiangjunqing
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @description:
  * @version:
  */
+@Import({CoreAutoConfiguration.class, SwaggerAutoConfiguration.class})
 @Configuration
 public class FrameworkAutoConfiguration {
 

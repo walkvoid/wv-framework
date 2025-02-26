@@ -37,7 +37,7 @@ public class SmartApplicationEventPublisher implements ApplicationEventPublisher
         
     }
 
-    @Async("traceIdTransmittableExecutor")
+    @Async("commonThreadPoolTaskExecutor")
     public void pushAsyncEvent(ApplicationEvent event) {
         log.debug("开始发送spring异步事件，event：{}", JsonUtils.object2json(event));
         this.applicationEventPublisher.publishEvent(event);
