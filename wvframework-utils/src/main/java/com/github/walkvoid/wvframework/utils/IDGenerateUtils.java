@@ -183,17 +183,4 @@ public class IDGenerateUtils {
             return  (hash ^ (hash>>>16)) & 1023;
         }
     }
-
-    public static void main(String[] args) {
-        int count = 0;
-        Set<Long> sets = new HashSet<>(1024);
-        for (int i = 0; i < 100000; i++) {
-            Long snowflakeId = IDGenerateUtils.getSnowflakeId();
-            if (sets.contains(snowflakeId)) {
-                System.out.println("snowflakeId duplicate:"+snowflakeId+",count:"+count++);
-            }else {
-                sets.add(snowflakeId);
-            }
-        }
-    }
 }
