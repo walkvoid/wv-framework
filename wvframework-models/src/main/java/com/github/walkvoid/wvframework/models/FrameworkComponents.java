@@ -1,4 +1,4 @@
-package com.github.walkvoid.wvframework.core.models;
+package com.github.walkvoid.wvframework.models;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public enum FrameworkComponents {
 
     CORE("core","com.github.walkvoid.wvframework.core.configuration.CoreAutoConfiguration"),
+    CACHE("chche","com.github.walkvoid.wvframework.cache.CacheAutoConfiguration"),
     ;
 
     FrameworkComponents(String name, String pkg) {

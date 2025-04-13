@@ -1,8 +1,10 @@
 package com.github.walkvoid.wvframework.core.configuration;
 
 import com.github.walkvoid.wvframework.core.annotations.EnableFramework;
-import com.github.walkvoid.wvframework.core.models.FrameworkComponents;
+
 import java.util.Map;
+
+import com.github.walkvoid.wvframework.models.FrameworkComponents;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
