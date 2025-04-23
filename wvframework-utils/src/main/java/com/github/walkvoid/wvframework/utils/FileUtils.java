@@ -325,7 +325,4 @@ public class FileUtils {
         return copy(source, fileOutputStream);
     }
 
-    public static void main(String[] args) {
-        Paths.get("xx").resolve("xx");
-    }
 }
