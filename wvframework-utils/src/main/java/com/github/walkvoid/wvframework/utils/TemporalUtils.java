@@ -2,7 +2,10 @@ package com.github.walkvoid.wvframework.utils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.DateTimeException;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,9 +13,13 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalQuery;
+import java.time.temporal.TemporalUnit;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,7 +112,7 @@ public class TemporalUtils {
      */
     private static <T extends TemporalAccessor> T parse(String content, List<String> patterns, Class<T> except, CompatibleMode mode) {
         if (StringUtils.isEmpty(content) || except == null) {
-            throw new IllegalArgumentException("content and except class cant not be null.");
+            throw new IllegalArgumentException("content and except class can not be null.");
         }
         String replaceContent = replaceMap.entrySet().stream().reduce(content,
                 (str, entry) -> str.replace(entry.getKey(), entry.getValue()), (s1, s2) -> s2);
@@ -346,36 +353,30 @@ public class TemporalUtils {
 
 
     public static void main(String[] args) {
-//        OffsetDateTime now = OffsetDateTime.now();
-//        System.out.println(now);
-//        //20240905135436283
-//        TemporalAccessor yyyyMM = DateTimeFormatter.ofPattern("yyyyMMdd HHmmssSSS").parse("20240905 135436283");
-//        System.out.println(yyyyMM);
-//        Arrays.asList("yyyy","yyyyMM","yyyyMMdd","yyyyMMdd HHmmss","yyyyMMdd HHmmssSSS");
-//        HashMap<String, String> map = new HashMap<>();
-//        map.putIfAbsent("-", "");
-//        map.putIfAbsent("/", "");
-//        map.putIfAbsent(":", "");
-//        map.putIfAbsent("T", " ");
-//        map.putIfAbsent(".", "");
-//        String xx = "2024-09-05T14:13:06.223";
-//        map.entrySet().stream().forEach(entry-> xx.replace(entry.getKey(), entry.getValue()));
+        String c1 = "2020-12-09T13:43:43.435";
+        String c2 = "13:43:43.435";
+        String c3 = "13:43:43";
+        String c4 = "2020/12/09 13:43:43";
+        String c5 = "2020-12-09";
+        String c6 = "12-09";
+        String c7 = "2020";
+        List<String> cs = CollectionUtils.newArrayList(c1, c2, c3, c4, c5, c6, c7);
+        for (String content : cs) {
+            LocalDateTime parse1 = TemporalUtils.parse(content, LocalDateTime.class);
+            System.out.println("content:"+ content +" parse LocalDateTime=======>" + parse1);
 
-        //LocalDateTime parse = parse("2024-09-09", "yyyy-MM-dd", LocalDateTime.class, CompatibleMode.CURRENT);
+            LocalDate parse2 = TemporalUtils.parse(content, LocalDate.class);
+            System.out.println("content:"+ content +" parse LocalDate=======>" + parse2);
 
-        //TemporalAccessor parse1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").parse("2024-09-09 19:07:40");
-        TemporalAccessor parse1 = DateTimeFormatter.ofPattern("HH:mm:ss").parse("19:07:40");
-        //if (parse1.isSupported(ChronoField.DAY_OF_MONTH))
+            LocalTime parse3 = TemporalUtils.parse(content, LocalTime.class);
+            System.out.println("content:"+ content +" parse LocalTime=======>" + parse3);
 
+            YearMonth parse4 = TemporalUtils.parse(content, YearMonth.class);
+            System.out.println("content:"+ content +" parse YearMonth=======>" + parse4);
 
-
-        //parse1.isSupported()
-        LocalDate query = parse1.query( (temporal) -> temporal.query(LocalDate::from));
-        System.out.println(query);
-
-//        String content = "2020-12-09T13:43:43.435";
-//        LocalDateTime parse = parse(content, LocalDateTime.class);
-//        System.out.println(parse);
+            Year parse5 = TemporalUtils.parse(content, Year.class);
+            System.out.println("content:"+ content +" parse Year=======>" + parse5);
+        }
     }
 
 }
