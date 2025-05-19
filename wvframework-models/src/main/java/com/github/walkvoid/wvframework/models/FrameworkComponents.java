@@ -15,6 +15,7 @@ public enum FrameworkComponents {
 
     CORE("core","com.github.walkvoid.wvframework.core.configuration.CoreAutoConfiguration"),
     CACHE("chche","com.github.walkvoid.wvframework.cache.CacheAutoConfiguration"),
+    APIDOC("apidoc","com.github.walkvoid.wvframework.apidoc.ApiDocAutoConfiguration"),
     ;
 
     FrameworkComponents(String name, String pkg) {

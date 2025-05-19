@@ -17,8 +17,9 @@
         <spring.version>5.3.31</spring.version>
         <spring-boot.version>2.7.18</spring-boot.version>
         <dubbo-spring-boot-starter.version>2.7.23</dubbo-spring-boot-starter.version>
-        <springfox-spring-boot-starter.version>3.0.0</springfox-spring-boot-starter.version>
         <mybatis-spring-boot-starter.version>3.5.8</mybatis-spring-boot-starter.version>
+        <springfox.version>2.9.2</springfox.version>
+        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
 
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
@@ -87,16 +88,28 @@
                </exclusions>
            </dependency>
 
-           <dependency>
-               <groupId>io.springfox</groupId>
-               <artifactId>springfox-boot-starter</artifactId>
-               <version>${springfox-spring-boot-starter.version}</version>
-           </dependency>
+
 
            <dependency>
                <groupId>com.baomidou</groupId>
                <artifactId>mybatis-plus-boot-starter</artifactId>
                <version>${mybatis-spring-boot-starter.version}</version>
+           </dependency>
+
+           <dependency>
+               <groupId>io.springfox</groupId>
+               <artifactId>springfox-swagger2</artifactId>
+               <version>${springfox.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>io.springfox</groupId>
+               <artifactId>springfox-swagger2</artifactId>
+               <version>${springfox.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.springdoc</groupId>
+               <artifactId>springdoc-openapi-ui</artifactId>
+               <version>${springdoc-openapi-ui.version}</version>
            </dependency>
        </dependencies>
     </dependencyManagement>

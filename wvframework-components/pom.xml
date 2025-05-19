@@ -22,6 +22,7 @@
         <module>wvframework-lombok</module>
         <module>wvframework-dao</module>
         <module>wvframework-validation</module>
+        <module>wvframework-apidoc</module>
     </modules>
 
     <build>
