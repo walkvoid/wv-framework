@@ -130,11 +130,11 @@ public class TemporalUtils {
             } catch (DateTimeException exception) {
                 continue;
             }
-            LocalDateTime query = parse.query((temporal) -> temporal.query(LocalDateTime::from));
-            //supportMap.get()
-            parse.query((temporal) -> temporal.query(LocalDateTime::from));
-            if (except.equals(parse.getClass())) {
-                return (T)parse;
+            TemporalQuery<?> temporalQuery = queryMap.get(except);
+            Object query2 = parse.query(temporalQuery);
+//            LocalDateTime query1 = parse.query((temporal) -> temporal.query(LocalDateTime::from));
+            if (except.equals(query2.getClass())) {
+                return (T)query2;
             }
             return Convertors.convert(parse, except, mode);
         }
@@ -236,7 +236,7 @@ public class TemporalUtils {
      * CURRENT: 2024-09-05 -> 2024-09-05 10:11:37
      * MAX: 2024-09-05 -> 2024-09-05 23:59:59
      */
-    enum CompatibleMode {
+    public enum CompatibleMode {
         MIN,
         CURRENT,
         MAX,
