@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class TemporalUtils {
 
     private static Map<String, String> replaceMap;
-    private static List<String> standardPatterns;
+    private static Map<String, DateTimeFormatter> standardFormatter;
     private static Map<Class<? extends TemporalAccessor>, TemporalQuery<?>> queryMap;
 
 
@@ -49,14 +49,14 @@ public class TemporalUtils {
         replaceMap.putIfAbsent("T", " ");
         replaceMap.putIfAbsent(".", "");
 
-        standardPatterns = new ArrayList<>();
-        standardPatterns.add("yyyy");
-        standardPatterns.add("yyyyMM");
-        standardPatterns.add("yyyyMMdd");
-        standardPatterns.add("yyyyMMdd HHmmss");
-        standardPatterns.add("yyyyMMdd HHmmssSSS");
-        standardPatterns.add("HHmmss");
-        standardPatterns.add("HHmmssSSS");
+        standardFormatter = new HashMap<>(16);
+        standardFormatter.put("yyyy", DateTimeFormatter.ofPattern("yyyy"));
+//        standardPatterns.put("yyyyMM", DateTimeFormatter.ofPattern("yyyy"));
+//        standardPatterns.put("yyyyMMdd");
+//        standardPatterns.put("yyyyMMdd HHmmss");
+//        standardPatterns.put("yyyyMMdd HHmmssSSS");
+//        standardPatterns.put("HHmmss");
+//        standardPatterns.put("HHmmssSSS");
 
         queryMap = new HashMap<>(8);
         queryMap.put(Year.class, (temporal) -> temporal.query(Year::from));
@@ -117,7 +117,7 @@ public class TemporalUtils {
         String replaceContent = replaceMap.entrySet().stream().reduce(content,
                 (str, entry) -> str.replace(entry.getKey(), entry.getValue()), (s1, s2) -> s2);
         if (CollectionUtils.isEmpty(patterns)) {
-            patterns = standardPatterns.stream().filter(x -> x.length() == replaceContent.length()).collect(Collectors.toList());
+            //patterns = standardPatterns.stream().filter(x -> x.length() == replaceContent.length()).collect(Collectors.toList());
         }
         if (CollectionUtils.isEmpty(patterns)) {
             throw new UnsupportedOperationException("unsupport parse " + content);
@@ -351,32 +351,5 @@ public class TemporalUtils {
         }
     }
 
-
-    public static void main(String[] args) {
-        String c1 = "2020-12-09T13:43:43.435";
-        String c2 = "13:43:43.435";
-        String c3 = "13:43:43";
-        String c4 = "2020/12/09 13:43:43";
-        String c5 = "2020-12-09";
-        String c6 = "12-09";
-        String c7 = "2020";
-        List<String> cs = CollectionUtils.newArrayList(c1, c2, c3, c4, c5, c6, c7);
-        for (String content : cs) {
-            LocalDateTime parse1 = TemporalUtils.parse(content, LocalDateTime.class);
-            System.out.println("content:"+ content +" parse LocalDateTime=======>" + parse1);
-
-            LocalDate parse2 = TemporalUtils.parse(content, LocalDate.class);
-            System.out.println("content:"+ content +" parse LocalDate=======>" + parse2);
-
-            LocalTime parse3 = TemporalUtils.parse(content, LocalTime.class);
-            System.out.println("content:"+ content +" parse LocalTime=======>" + parse3);
-
-            YearMonth parse4 = TemporalUtils.parse(content, YearMonth.class);
-            System.out.println("content:"+ content +" parse YearMonth=======>" + parse4);
-
-            Year parse5 = TemporalUtils.parse(content, Year.class);
-            System.out.println("content:"+ content +" parse Year=======>" + parse5);
-        }
-    }
 
 }

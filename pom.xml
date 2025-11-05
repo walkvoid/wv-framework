@@ -4,18 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.walkvoid.wvframework</groupId>
-    <artifactId>wvframework-build</artifactId>
+    <artifactId>wvframework</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
-    <description>Build wvframework projects.</description>
+    <version>build</version>
+    <description>wv-framework build</description>
+
 
     <modules>
         <module>wvframework-dependencies</module>
-        <module>wvframework-annotations</module>
+        <module>wvframework-parent</module>
         <module>wvframework-models</module>
+        <module>wvframework-annotations</module>
         <module>wvframework-utils</module>
-        <module>wvframework-tests</module>
         <module>wvframework-components</module>
+        <module>wvframework-tests</module>
         <module>wvframework-starters</module>
     </modules>
 

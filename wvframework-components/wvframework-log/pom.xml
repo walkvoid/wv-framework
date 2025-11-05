@@ -8,25 +8,12 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>wvframework-core</artifactId>
+    <artifactId>wvframework-log</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-utils</artifactId>
-        </dependency>
+
     </dependencies>
 
 

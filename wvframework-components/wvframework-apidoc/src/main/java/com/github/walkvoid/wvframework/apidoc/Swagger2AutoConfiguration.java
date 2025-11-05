@@ -6,7 +6,7 @@ import org.springframework.core.env.Environment;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.oas.annotations.EnableOpenApi;
+//import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @desc DocumentationType.SWAGGER_2 autoConfiguration class
  */
 
-@EnableOpenApi
+//@EnableOpenApi
 @EnableSwagger2
 @Configuration
 public class Swagger2AutoConfiguration {

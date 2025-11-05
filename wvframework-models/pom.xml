@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-dependencies</artifactId>
+        <artifactId>wvframework-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../wvframework-dependencies/pom.xml</relativePath>
+        <relativePath>../wvframework-parent/pom.xml</relativePath>
     </parent>
 
 
@@ -22,7 +22,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>3.1.9</version>
         </dependency>
     </dependencies>
 

@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-dependencies</artifactId>
+        <artifactId>wvframework-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../wvframework-dependencies/pom.xml</relativePath>
+        <relativePath>../wvframework-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>wvframework-components</artifactId>
@@ -23,6 +23,8 @@
         <module>wvframework-dao</module>
         <module>wvframework-validation</module>
         <module>wvframework-apidoc</module>
+        <module>wvframework-feign</module>
+        <module>wvframework-log</module>
     </modules>
 
     <build>
