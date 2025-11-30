@@ -16,13 +16,15 @@
         <jackson.version>2.13.5</jackson.version>
         <spring.version>5.3.31</spring.version>
         <spring-boot.version>2.7.18</spring-boot.version>
+
         <dubbo-spring-boot-starter.version>2.7.23</dubbo-spring-boot-starter.version>
+        <mybatis.version>3.5.16</mybatis.version>
+        <mybatis-plus-annotation.version>3.5.8</mybatis-plus-annotation.version>
         <mybatis-spring-boot-starter.version>3.5.8</mybatis-spring-boot-starter.version>
         <springfox.version>2.9.2</springfox.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
         <spring-cloud-starter-openfeign.version>3.1.9</spring-cloud-starter-openfeign.version>
         <feign-okhttp.version>11.10</feign-okhttp.version>
-
         <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
         <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
@@ -104,9 +106,19 @@
 
 
            <dependency>
+               <groupId>org.mybatis</groupId>
+               <artifactId>mybatis</artifactId>
+               <version>${mybatis.version}</version>
+           </dependency>
+           <dependency>
                <groupId>com.baomidou</groupId>
                <artifactId>mybatis-plus-boot-starter</artifactId>
                <version>${mybatis-spring-boot-starter.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>com.baomidou</groupId>
+               <artifactId>mybatis-plus-annotation</artifactId>
+               <version>${mybatis-plus-annotation.version}</version>
            </dependency>
 
            <dependency>

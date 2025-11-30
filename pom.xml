@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.walkvoid.wvframework</groupId>
-    <artifactId>wvframework</artifactId>
+    <artifactId>wv-framework</artifactId>
     <packaging>pom</packaging>
     <version>build</version>
     <description>wv-framework build</description>
