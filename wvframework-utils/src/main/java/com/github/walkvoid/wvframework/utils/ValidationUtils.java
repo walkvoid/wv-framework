@@ -1,11 +1,10 @@
 package com.github.walkvoid.wvframework.utils;
 
-import javax.validation.Configuration;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import org.hibernate.validator.BaseHibernateValidatorConfiguration;
+import jakarta.validation.Configuration;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 import java.util.Set;
 
@@ -60,7 +59,7 @@ public class ValidationUtils {
                 if (result == null) {
                     Configuration<?> configure = Validation.byDefaultProvider().configure();
                     if (fastFail) {
-                        configure.addProperty(BaseHibernateValidatorConfiguration.FAIL_FAST, Boolean.TRUE.toString());
+                        configure.addProperty("hibernate.validator.fail_fast", Boolean.TRUE.toString());
                         result = validatorFastFail = configure.buildValidatorFactory().getValidator();
                     } else {
                         result = validator = configure.buildValidatorFactory().getValidator();

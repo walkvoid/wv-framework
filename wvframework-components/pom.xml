@@ -25,6 +25,7 @@
         <module>wvframework-apidoc</module>
         <module>wvframework-feign</module>
         <module>wvframework-log</module>
+        <module>wvframework-crypto</module>
     </modules>
 
     <build>

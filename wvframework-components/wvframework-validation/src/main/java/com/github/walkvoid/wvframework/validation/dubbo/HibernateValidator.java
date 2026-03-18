@@ -11,6 +11,11 @@ import org.apache.dubbo.validation.Validator;
 public class HibernateValidator implements Validator {
 
     @Override
+    public boolean isSupport() {
+        return true;
+    }
+
+    @Override
     public void validate(String methodName, Class<?>[] parameterTypes, Object[] arguments) throws Exception {
 
     }

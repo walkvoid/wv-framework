@@ -3,7 +3,7 @@ package com.github.walkvoid.wvframework.utils;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

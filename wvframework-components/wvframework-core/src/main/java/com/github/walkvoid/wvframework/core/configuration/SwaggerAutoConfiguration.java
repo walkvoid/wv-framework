@@ -1,59 +1,43 @@
 package com.github.walkvoid.wvframework.core.configuration;
 
 import com.github.walkvoid.wvframework.core.models.SwaggerProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 /**
+ * OpenAPI 3 (springdoc) 自动配置，替代原 Springfox Swagger2。
+ * 当 classpath 存在 springdoc 且配置启用时生效。
+ *
  * @author walkvoid
  * @version 1.0
  * @date 2025/2/26
- * @desc
  */
-
 @Configuration
+@ConditionalOnClass(OpenAPI.class)
+@EnableConfigurationProperties(SwaggerProperties.class)
 public class SwaggerAutoConfiguration {
 
-
-
     @Bean
-    public Docket docket(SwaggerProperties swaggerProperties) {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage(swaggerProperties.getBasePackage()))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(convertApiInfo(swaggerProperties.getApiInfo()));
+    public OpenAPI customOpenAPI(SwaggerProperties swaggerProperties) {
+        SwaggerProperties.ApiInfo api = swaggerProperties.getApiInfo();
+        if (api == null) {
+            return new OpenAPI().info(new Info().title("API").version("1.0"));
+        }
+        Info info = new Info()
+                .title(api.getTitle())
+                .description(api.getDescription())
+                .version(api.getVersion())
+                .license(api.getLicense() != null ? new License().name(api.getLicense()).url(api.getLicenseUrl()) : null)
+                .contact(api.getContact() != null
+                        ? new Contact().name(api.getContact().getName()).url(api.getContact().getUrl()).email(api.getContact().getEmail())
+                        : null);
+        return new OpenAPI().info(info);
     }
-
-
-    public SwaggerProperties getSwaggerProperties(SwaggerProperties swaggerProperties, Environment environment){
-        return new SwaggerProperties();
-    }
-
-    private static ApiInfo convertApiInfo(SwaggerProperties.ApiInfo apiInfo) {
-        return new ApiInfoBuilder()
-                .title(apiInfo.getTitle())
-                .description(apiInfo.getDescription())
-                .version(apiInfo.getVersion())
-                .contact(new Contact(
-                        apiInfo.getContact().getName(),
-                        apiInfo.getContact().getUrl(),
-                        apiInfo.getContact().getEmail()))
-                .license(apiInfo.getLicense())
-                .licenseUrl(apiInfo.getLicenseUrl())
-                .build();
-    }
-
 
 }
