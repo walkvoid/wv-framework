@@ -4,21 +4,19 @@
 
 ### JDK 21 编译（推荐）
 
-本模块 **编译目标为 `--release 21`**，请使用 **JDK 21**。
+本工程已使用 **Gradle Wrapper**，工具链在根 `build.gradle.kts` 中指定为 **Java 21**。
 
-1. **一键脚本**（默认 `JAVA_HOME=C:\Program Files\Java\jdk-21.0.10`，可按需改脚本）：  
-   在 `wvframework-crypto` 目录双击或执行：  
-   `compile-with-jdk21.cmd`
-
-2. **命令行**（在 **`wv-framework` 根目录**，即包含 `wvframework-dependencies` 的目录）：
+在 **`wv-framework` 仓库根目录**执行：
 
 ```bat
 set JAVA_HOME=C:\Program Files\Java\jdk-21.0.10
 set PATH=%JAVA_HOME%\bin;%PATH%
-mvn -pl wvframework-components/wvframework-crypto -am clean compile test
+gradlew.bat :wvframework-crypto:build
 ```
 
-> 请勿仅在 `wvframework-crypto` 子目录单独执行 `mvn`（父 POM `${revision}` / flatten 会导致解析失败）；务必带 `-pl ... -am` 从根目录构建，或使用上述脚本。
+或根目录 `gradlew-build.cmd`（可在脚本内取消注释 `JAVA_HOME`）。
+
+> 依赖仓库：默认优先使用 `gradle.properties` 中的 `wvframework.maven.repo`（本地 Maven 目录），其次 `mavenCentral()`。
 
 ## 包结构
 

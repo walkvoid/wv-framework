@@ -1,0 +1,8 @@
+# 复制为 gradle-local.properties（已加入 .gitignore），按电脑填写，不要提交仓库。
+# 会覆盖 gradle.properties 中同名键。
+
+# 方式 A：多台电脑各自一个文件，只写本机路径（单仓库）
+# wvframework.maven.repo=file:///C:/Users/you/.m2/repository
+
+# 方式 B：一台电脑上同时挂多个本地仓库（先搜第一个，再搜第二个…）
+# wvframework.maven.repos=file:///D:/apache-maven-3.5.3/repo,file:///C:/Users/you/.m2/repository
