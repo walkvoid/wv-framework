@@ -1,44 +1,32 @@
-import java.io.File
-import java.util.Properties
-
 rootProject.name = "wv-framework"
 
-/** 合并 gradle.properties 与 gradle-local.properties（后者覆盖前者，适合家里/公司不同配置） */
-fun loadMergedGradleProperties(rootDir: File): Properties {
-    val merged = Properties()
-    rootDir.resolve("gradle.properties").takeIf { it.exists() }?.reader()?.use { merged.load(it) }
-    rootDir.resolve("gradle-local.properties").takeIf { it.exists() }?.reader()?.use { local ->
-        val overlay = Properties()
+// pluginManagement / dependencyResolutionManagement 在 Kotlin DSL 中单独编译，不能引用本文件顶层的函数或变量，
+// 因此下面两处各自内联读取 gradle.properties + gradle-local.properties（逻辑相同）。
+
+pluginManagement {
+    val merged = java.util.Properties()
+    settings.rootDir.resolve("gradle.properties").takeIf { f -> f.exists() }?.reader()?.use { r -> merged.load(r) }
+    settings.rootDir.resolve("gradle-local.properties").takeIf { f -> f.exists() }?.reader()?.use { local ->
+        val overlay = java.util.Properties()
         overlay.load(local)
         merged.putAll(overlay)
     }
-    return merged
-}
-
-/**
- * 本地 Maven 仓库 URL 列表（按顺序查找，与 Maven 多 mirror 不同，这里是多个独立 repo）。
- * - wvframework.maven.repos：逗号分隔多个 file:/// 或 https:// 地址（推荐）
- * - 若未配置 repos，则回退 wvframework.maven.repo 单个地址
- */
-fun localMavenRepoUrls(props: Properties): List<String> {
-    val multi = props.getProperty("wvframework.maven.repos", "")
+    val multi = merged.getProperty("wvframework.maven.repos", "")
         .split(",")
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-    if (multi.isNotEmpty()) return multi
-    val single = props.getProperty("wvframework.maven.repo", "file:///D:/apache-maven-3.5.3/repo").trim()
-    return if (single.isEmpty()) emptyList() else listOf(single)
-}
-
-val mergedProps = loadMergedGradleProperties(settings.rootDir)
-val localMavenUrls = localMavenRepoUrls(mergedProps)
-
-pluginManagement {
+        .map { s -> s.trim() }
+        .filter { s -> s.isNotEmpty() }
+    val localMavenUrls: List<String> =
+        if (multi.isNotEmpty()) {
+            multi
+        } else {
+            val single = merged.getProperty("wvframework.maven.repo", "file:///D:/apache-maven-3.5.3/repo").trim()
+            if (single.isEmpty()) emptyList() else listOf(single)
+        }
     repositories {
-        localMavenUrls.forEachIndexed { index, url ->
+        localMavenUrls.forEachIndexed { index: Int, repoUrl: String ->
             maven {
                 name = "localMavenRepo-$index"
-                url = uri(url)
+                url = uri(repoUrl)
             }
         }
         mavenCentral()
@@ -47,12 +35,30 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    val merged = java.util.Properties()
+    settings.rootDir.resolve("gradle.properties").takeIf { f -> f.exists() }?.reader()?.use { r -> merged.load(r) }
+    settings.rootDir.resolve("gradle-local.properties").takeIf { f -> f.exists() }?.reader()?.use { local ->
+        val overlay = java.util.Properties()
+        overlay.load(local)
+        merged.putAll(overlay)
+    }
+    val multi = merged.getProperty("wvframework.maven.repos", "")
+        .split(",")
+        .map { s -> s.trim() }
+        .filter { s -> s.isNotEmpty() }
+    val localMavenUrls: List<String> =
+        if (multi.isNotEmpty()) {
+            multi
+        } else {
+            val single = merged.getProperty("wvframework.maven.repo", "file:///D:/apache-maven-3.5.3/repo").trim()
+            if (single.isEmpty()) emptyList() else listOf(single)
+        }
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
-        localMavenUrls.forEachIndexed { index, url ->
+        localMavenUrls.forEachIndexed { index: Int, repoUrl: String ->
             maven {
                 name = "localMavenRepo-$index"
-                url = uri(url)
+                url = uri(repoUrl)
             }
         }
         mavenCentral()
