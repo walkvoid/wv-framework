@@ -4,62 +4,23 @@ rootProject.name = "wv-framework"
 // 因此下面两处各自内联读取 gradle.properties + gradle-local.properties（逻辑相同）。
 
 pluginManagement {
-    val merged = java.util.Properties()
-    settings.rootDir.resolve("gradle.properties").takeIf { f -> f.exists() }?.reader()?.use { r -> merged.load(r) }
-    settings.rootDir.resolve("gradle-local.properties").takeIf { f -> f.exists() }?.reader()?.use { local ->
-        val overlay = java.util.Properties()
-        overlay.load(local)
-        merged.putAll(overlay)
-    }
-    val multi = merged.getProperty("wvframework.maven.repos", "")
-        .split(",")
-        .map { s -> s.trim() }
-        .filter { s -> s.isNotEmpty() }
-    val localMavenUrls: List<String> =
-        if (multi.isNotEmpty()) {
-            multi
-        } else {
-            val single = merged.getProperty("wvframework.maven.repo", "file:///D:/apache-maven-3.5.3/repo").trim()
-            if (single.isEmpty()) emptyList() else listOf(single)
-        }
     repositories {
-        localMavenUrls.forEachIndexed { index: Int, repoUrl: String ->
-            maven {
-                name = "localMavenRepo-$index"
-                url = uri(repoUrl)
-            }
+        mavenLocal()
+        maven {
+            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
         }
         mavenCentral()
         gradlePluginPortal()
     }
+
+
 }
 
 dependencyResolutionManagement {
-    val merged = java.util.Properties()
-    settings.rootDir.resolve("gradle.properties").takeIf { f -> f.exists() }?.reader()?.use { r -> merged.load(r) }
-    settings.rootDir.resolve("gradle-local.properties").takeIf { f -> f.exists() }?.reader()?.use { local ->
-        val overlay = java.util.Properties()
-        overlay.load(local)
-        merged.putAll(overlay)
-    }
-    val multi = merged.getProperty("wvframework.maven.repos", "")
-        .split(",")
-        .map { s -> s.trim() }
-        .filter { s -> s.isNotEmpty() }
-    val localMavenUrls: List<String> =
-        if (multi.isNotEmpty()) {
-            multi
-        } else {
-            val single = merged.getProperty("wvframework.maven.repo", "file:///D:/apache-maven-3.5.3/repo").trim()
-            if (single.isEmpty()) emptyList() else listOf(single)
-        }
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
-        localMavenUrls.forEachIndexed { index: Int, repoUrl: String ->
-            maven {
-                name = "localMavenRepo-$index"
-                url = uri(repoUrl)
-            }
+        mavenLocal()
+        maven {
+            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
         }
         mavenCentral()
     }
@@ -84,6 +45,7 @@ include(
     ":wvframework-crypto",
     ":wvframework-web-starter",
     ":wvframework-validation-starter",
+    ":wvframework-bom",
 )
 
 mapOf(
@@ -105,6 +67,7 @@ mapOf(
     ":wvframework-crypto" to "wvframework-components/wvframework-crypto",
     ":wvframework-web-starter" to "wvframework-starters/wvframework-web-starter",
     ":wvframework-validation-starter" to "wvframework-starters/wvframework-validation-starter",
+    ":wvframework-bom" to "wvframework-bom",
 ).forEach { (name, path) ->
     project(name).projectDir = file(path)
 }

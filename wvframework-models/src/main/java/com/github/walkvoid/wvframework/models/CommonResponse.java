@@ -13,6 +13,7 @@ public class CommonResponse<R> implements BaseResponse<String, R>, Traceable {
 
     private String code;
 
+
     private String message;
 
     /**

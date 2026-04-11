@@ -18,5 +18,7 @@ public final class PemPublicKeyLoader implements PublicKeyLoader {
     @Override
     public PublicKey loadPublicKey() {
         return PemKeySupport.parsePublicKey(pem, type);
+
+        
     }
 }
