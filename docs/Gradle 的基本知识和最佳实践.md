@@ -107,10 +107,73 @@ systemProp.maven.repo.local=D:/custom/maven/repo
 
 ### 5.1 本地 Maven 仓库配置
 
-**自定义本地仓库mavenLocal()路径**：
-- 通过系统属性：`-Dmaven.repo.local=D:/custom/repo`
-- 通过 IDE 设置：在 IDE 中配置 Maven 本地仓库路径
-- 通过环境变量：设置 `MAVEN_OPTS="-Dmaven.repo.local=/path/to/repo"`
+#### mavenLocal() 方法
+`mavenLocal()` 方法用于在 Gradle 项目中添加一个本地 Maven 缓存仓库，用于查找项目依赖。它使用 `org.gradle.api.artifacts.ArtifactRepositoryContainer#DEFAULT_MAVEN_LOCAL_REPO_NAME` 作为仓库名称，并返回添加的 `MavenArtifactRepository` 实例。
+
+**使用示例**：
+```groovy
+repositories {
+    mavenLocal()
+}
+```
+
+#### 本地 Maven 仓库位置确定规则
+Gradle 会按照以下优先级顺序确定本地 Maven 仓库的位置：
+1. 系统属性 `maven.repo.local` 的值（如果已设置）
+2. `~/.m2/settings.xml` 文件中的 `<localRepository>` 元素（如果文件存在且已设置）
+3. `$M2_HOME/conf/settings.xml` 文件中的 `<localRepository>` 元素（如果文件存在且已设置，其中 `$M2_HOME` 是环境变量）
+4. 默认路径 `~/.m2/repository`
+
+#### 设置 maven.repo.local 系统属性的方法
+
+**1. 在 Gradle 命令行中设置**
+```bash
+# Windows
+gradle build -Dmaven.repo.local=C:\path\to\local\repo
+
+# Linux/macOS
+gradle build -Dmaven.repo.local=/path/to/local/repo
+```
+
+**2. 在 Gradle 构建脚本中设置**
+```groovy
+allprojects {
+    repositories {
+        // 先设置系统属性
+        System.setProperty('maven.repo.local', '/path/to/local/repo')
+        mavenLocal()
+        // 其他仓库...
+    }
+}
+```
+
+**3. 在 gradle.properties 文件中设置**
+```properties
+# gradle.properties
+systemProp.maven.repo.local=/path/to/local/repo
+```
+
+**4. 在 IDE 中设置**
+- **IntelliJ IDEA**：打开 Run/Debug Configurations，选择或创建一个 Gradle 运行配置，在 "VM options" 字段中添加 `-Dmaven.repo.local=/path/to/local/repo`
+- **Eclipse**：打开 Run Configurations，选择或创建一个 Gradle 运行配置，在 "Arguments" 标签页的 "VM arguments" 字段中添加 `-Dmaven.repo.local=/path/to/local/repo`
+
+**5. 设置为系统环境变量**
+- **Windows**：在系统变量中创建 `MAVEN_OPTS` 变量，值为 `-Dmaven.repo.local=C:\path\to\local\repo`
+- **Linux/macOS**：在 `~/.bashrc`、`~/.bash_profile` 或 `~/.zshrc` 中添加 `export MAVEN_OPTS="-Dmaven.repo.local=/path/to/local/repo"`
+
+#### MAVEN_OPTS 环境变量
+`MAVEN_OPTS` 是 Maven 构建工具的标准环境变量名称，用于向 Maven 启动的 JVM 传递参数。虽然它是 Maven 的环境变量，但 Gradle 在某些情况下也会考虑它，特别是当设置 `maven.repo.local` 时。
+
+**MAVEN_OPTS 的用途**：
+1. **设置 JVM 内存参数**：`export MAVEN_OPTS="-Xms512m -Xmx1024m"`
+2. **设置系统属性**：`export MAVEN_OPTS="-Dmaven.repo.local=/path/to/local/repo"`
+3. **其他 JVM 参数**：如启用远程调试等
+
+**注意事项**：
+- 路径必须是绝对路径，不能使用相对路径
+- 确保指定的目录存在，否则 Maven/Gradle 可能会使用默认路径
+- 不同操作系统的路径分隔符不同（Windows 使用 `\`，Linux/macOS 使用 `/`）
+- 如果同时在多个地方设置了该属性，优先级顺序为：命令行参数 > 构建脚本 > 系统环境变量
 
 ### 5.2 依赖解析策略
 
