@@ -22,6 +22,7 @@ publishing {
 }
 
 // 版本定义
+val springVersion = "6.1.6"
 val springBootVersion = "3.2.5"
 val springCloudVersion = "2023.0.1"
 val jacksonVersion = "2.15.2"
@@ -33,6 +34,7 @@ val mybatisPlusVersion = "3.5.5"
 val feignVersion = "12.3"
 val bouncycastleVersion = "1.70"
 val junitVersion = "5.10.2"
+val lombokVersion = "1.18.30"
 
 dependencies {
     constraints {
@@ -49,9 +51,11 @@ dependencies {
         api("org.springframework.boot:spring-boot-starter-data-jdbc:${springBootVersion}")
         api("org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}")
         api("org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}")
+        api("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+        api("org.springframework.security:spring-security-core:${springVersion}")
         
-        api("org.springframework:spring-context:6.1.6")
-        api("org.springframework:spring-web:6.1.6")
+        api("org.springframework:spring-context:${springVersion}")
+        api("org.springframework:spring-web:${springVersion}")
         
         api("org.slf4j:slf4j-api:2.0.11")
         
@@ -67,5 +71,6 @@ dependencies {
         api("org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}")
         api("org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}")
         api("org.junit.jupiter:junit-jupiter:${junitVersion}")
+        api("org.projectlombok:lombok:${lombokVersion}")
     }
 }
