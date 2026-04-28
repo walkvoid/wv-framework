@@ -296,7 +296,7 @@ public class ByteUtils {
         }
         T t = null;
         if (Byte.class == tClass) {
-            t =  (T)new Byte(bytes[startInclude]);
+            t =  (T)Byte.valueOf(bytes[startInclude]);
         } else if (Integer.class == tClass || Long.class == tClass || Short.class == tClass || LongAdder.class == tClass) {
             Long result =  null;
             for (int i = 0; i <endExclusive - startInclude; i++) {
@@ -388,9 +388,9 @@ public class ByteUtils {
      */
     private static <T extends Number> T longToNumber(Long value, Class<T> tClass) {
         if (tClass == Short.class) {
-            return (T)(new Short(value.shortValue()));
+            return (T)(Short.valueOf(value.shortValue()));
         } else if (tClass == Integer.class) {
-            return (T)(new Integer(value.intValue()));
+            return (T)(Integer.valueOf(value.intValue()));
         } else if (tClass == AtomicInteger.class) {
             return (T)(new AtomicInteger(value.intValue()));
         } else if (tClass == Long.class) {

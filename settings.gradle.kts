@@ -6,9 +6,9 @@ rootProject.name = "wv-framework"
 pluginManagement {
     repositories {
         mavenLocal()
-        maven {
-            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
-        }
+//        maven {
+//            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
+//        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -19,9 +19,9 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenLocal()
-        maven {
-            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
-        }
+//        maven {
+//            url = uri(providers.environmentVariable("MAVEN_REPO_PATH"))
+//        }
         mavenCentral()
     }
 }

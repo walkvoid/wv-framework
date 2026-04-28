@@ -37,40 +37,26 @@ val junitVersion = "5.10.2"
 val lombokVersion = "1.18.30"
 
 dependencies {
+    api(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+    
     constraints {
-        // 第三方依赖版本约束
-        api("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
-        api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
-        api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
-        
-        api("org.springframework.boot:spring-boot-starter:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-data-jdbc:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}")
-        api("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
-        api("org.springframework.security:spring-security-core:${springVersion}")
-        
-        api("org.springframework:spring-context:${springVersion}")
-        api("org.springframework:spring-web:${springVersion}")
-        
-        api("org.slf4j:slf4j-api:2.0.11")
+        api("com.github.walkvoid.wvframework:wvframework-annotations:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-models:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-utils:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-json:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-cache:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-excel:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-apidoc:${project.version}")
+        api("com.github.walkvoid.wvframework:wvframework-validation-starter:${project.version}")
         
         api("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}")
         api("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:${knife4jVersion}")
-        
         api("org.apache.dubbo:dubbo-spring-boot-starter:${dubboVersion}")
         api("org.mybatis:mybatis:${mybatisVersion}")
         api("com.baomidou:mybatis-plus-spring-boot3-starter:${mybatisPlusVersion}")
-        
         api("io.github.openfeign:feign-okhttp:${feignVersion}")
-        
         api("org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}")
         api("org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}")
         api("org.junit.jupiter:junit-jupiter:${junitVersion}")
-        api("org.projectlombok:lombok:${lombokVersion}")
     }
 }
