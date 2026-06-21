@@ -1,5 +1,7 @@
 package com.github.walkvoid.wvframework.models;
 
+import jakarta.validation.constraints.AssertFalse;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,8 +13,8 @@ import java.time.LocalDateTime;
  */
 public class BaseVO implements Serializable {
 
-
     private LocalDateTime createTime;
+
 
     private Long createBy;
 
