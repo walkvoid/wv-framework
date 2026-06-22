@@ -6,24 +6,25 @@
 
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-starters</artifactId>
+        <artifactId>wvframework-components</artifactId>
         <version>4.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wvframework-validation-starter</artifactId>
+    <artifactId>wvframework-feign</artifactId>
     <packaging>jar</packaging>
-    <name>wvframework-validation-starter</name>
-    <description>WV Framework Validation Starter</description>
+    <name>wvframework-feign</name>
 
     <dependencies>
+        <!-- Spring Cloud OpenFeign -->
         <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-validation</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+        <!-- OkHttp -->
         <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-models</artifactId>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
         </dependency>
     </dependencies>
 </project>

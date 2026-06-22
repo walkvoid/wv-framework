@@ -6,24 +6,29 @@
 
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-starters</artifactId>
+        <artifactId>wvframework-components</artifactId>
         <version>4.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wvframework-validation-starter</artifactId>
+    <artifactId>wvframework-crypto</artifactId>
     <packaging>jar</packaging>
-    <name>wvframework-validation-starter</name>
-    <description>WV Framework Validation Starter</description>
+    <name>wvframework-crypto</name>
 
     <dependencies>
+        <!-- Spring Boot -->
         <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-validation</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!-- BouncyCastle -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-models</artifactId>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
         </dependency>
     </dependencies>
 </project>

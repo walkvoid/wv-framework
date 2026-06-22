@@ -6,24 +6,20 @@
 
     <parent>
         <groupId>com.github.walkvoid.wvframework</groupId>
-        <artifactId>wvframework-starters</artifactId>
+        <artifactId>wvframework-components</artifactId>
         <version>4.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wvframework-validation-starter</artifactId>
+    <artifactId>wvframework-excel</artifactId>
     <packaging>jar</packaging>
-    <name>wvframework-validation-starter</name>
-    <description>WV Framework Validation Starter</description>
+    <name>wvframework-excel</name>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-models</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

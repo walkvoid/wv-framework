@@ -103,6 +103,11 @@
             </dependency>
             <dependency>
                 <groupId>com.github.walkvoid.wvframework</groupId>
+                <artifactId>wvframework-dao-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.walkvoid.wvframework</groupId>
                 <artifactId>wvframework-validation</artifactId>
                 <version>${project.version}</version>
             </dependency>

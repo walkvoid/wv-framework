@@ -7,6 +7,7 @@
         <groupId>com.github.walkvoid.wvframework</groupId>
         <artifactId>wvframework-parent</artifactId>
         <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../wvframework-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>wvframework-starters</artifactId>
@@ -17,6 +18,6 @@
 
     <modules>
         <module>wvframework-validation-starter</module>
-        <module>wvframework-web-starter</module>
+        <module>wvframework-dao-starter</module>
     </modules>
 </project>

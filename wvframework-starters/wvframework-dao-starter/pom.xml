@@ -11,19 +11,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wvframework-validation-starter</artifactId>
+    <artifactId>wvframework-dao-starter</artifactId>
     <packaging>jar</packaging>
-    <name>wvframework-validation-starter</name>
-    <description>WV Framework Validation Starter</description>
+    <name>wvframework-dao-starter</name>
+    <description>WV Framework DAO Starter — 引入后自动注册 BaseEnum TypeHandler</description>
 
     <dependencies>
         <dependency>
             <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.walkvoid.wvframework</groupId>
-            <artifactId>wvframework-models</artifactId>
+            <artifactId>wvframework-dao</artifactId>
         </dependency>
     </dependencies>
 </project>
