@@ -14,9 +14,16 @@
     <artifactId>wvframework-dao</artifactId>
     <packaging>jar</packaging>
     <name>wvframework-dao</name>
-    <description>WV Framework DAO — BaseEnum, TypeHandler, auto-configuration</description>
+    <description>WV Framework DAO — BaseEnum + auto-configuration</description>
 
     <dependencies>
+        <!-- MyBatis-Plus annotation (for IEnum) -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- MyBatis (provided — consumer brings their own starter) -->
         <dependency>
             <groupId>org.mybatis</groupId>

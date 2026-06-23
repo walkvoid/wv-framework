@@ -118,6 +118,11 @@
             </dependency>
             <dependency>
                 <groupId>com.github.walkvoid.wvframework</groupId>
+                <artifactId>wvframework-apidoc-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.walkvoid.wvframework</groupId>
                 <artifactId>wvframework-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -19,5 +19,6 @@
     <modules>
         <module>wvframework-validation-starter</module>
         <module>wvframework-dao-starter</module>
+        <module>wvframework-apidoc-starter</module>
     </modules>
 </project>
