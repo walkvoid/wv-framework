@@ -1,7 +1,6 @@
 package com.github.walkvoid.wvframework.dao;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 /**
@@ -10,7 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
  * @author walkvoid
  */
 @AutoConfiguration
-@ConditionalOnClass({BaseEnum.class})
 @ConditionalOnProperty(prefix = "wvframework.dao", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class WvframeworkDaoAutoConfiguration {
     // 预留，后续扩展

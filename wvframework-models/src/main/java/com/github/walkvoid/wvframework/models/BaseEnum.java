@@ -1,4 +1,4 @@
-package com.github.walkvoid.wvframework.dao;
+package com.github.walkvoid.wvframework.models;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 
