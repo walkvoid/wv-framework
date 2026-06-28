@@ -8,7 +8,7 @@ import java.util.List;
  * @description:
  * @version:
  */
-class PageResponse<R> {
+public class PageResponse<R> {
 
     /**
      * total data count
@@ -30,7 +30,7 @@ class PageResponse<R> {
      */
     private List<R> data;
 
-    protected PageResponse(Long total, Integer size, Long current, List<R> data) {
+    public PageResponse(Long total, Integer size, Long current, List<R> data) {
         this.total = total;
         this.size = size;
         this.current = current;

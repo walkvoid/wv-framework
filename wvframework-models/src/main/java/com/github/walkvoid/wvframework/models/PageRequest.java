@@ -12,11 +12,11 @@ public class PageRequest<P> implements Serializable {
 
     private long current;
 
-    private int pageSize;
+    private int size;
 
     private P parameter;
 
-    private int firstPage;
+    private int first;
 
     /**
      * 默认查询第一页（从0开始），pageSize为10
@@ -56,18 +56,18 @@ public class PageRequest<P> implements Serializable {
     /**
      * 全参构造方法
      * @param current
-     * @param pageSize
+     * @param size
      * @param parameter
-     * @param firstPage
+     * @param first
      */
-    protected PageRequest(long current, int pageSize, P parameter, int firstPage) {
-        if (firstPage != 0 && firstPage != 1) {
+    protected PageRequest(long current, int size, P parameter, int first) {
+        if (first != 0 && first != 1) {
             throw new IllegalArgumentException("firstPage just can be 0 or 1");
         }
         this.current = current;
-        this.pageSize = pageSize;
+        this.size = size;
         this.parameter = parameter;
-        this.firstPage = firstPage;
+        this.first = first;
     }
 
     /**
@@ -85,12 +85,12 @@ public class PageRequest<P> implements Serializable {
         this.current = current;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getSize() {
+        return size;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public P getParameter() {
@@ -101,11 +101,35 @@ public class PageRequest<P> implements Serializable {
         this.parameter = parameter;
     }
 
-    public int getFirstPage() {
-        return firstPage;
+    public int getFirst() {
+        return first;
     }
 
-    public void setFirstPage(int firstPage) {
-        this.firstPage = firstPage;
+    public void setFirst(int first) {
+        this.first = first;
+    }
+
+    /**
+     * 解析有效页大小，默认 10
+     */
+    public int resolvePageSize() {
+        return size > 0 ? size : 10;
+    }
+
+    /**
+     * 转换为 MyBatis-Plus 页码（从 1 开始）
+     */
+    public long toMpPageNum() {
+        if (first == 0) {
+            return current + 1;
+        }
+        return current > 0 ? current : 1;
+    }
+
+    /**
+     * 将 MyBatis-Plus 页码转换为响应当前页（与 firstPage 约定一致）
+     */
+    public long toResponseCurrent(long mpCurrent) {
+        return first == 0 ? mpCurrent - 1 : mpCurrent;
     }
 }

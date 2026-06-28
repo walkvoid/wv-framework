@@ -37,6 +37,38 @@ public class WebPageResponse<R> extends PageResponse<R> implements  BaseResponse
     }
 
     /**
+     * 根据 PageResponse 构造成功分页响应
+     */
+    public static <R> WebPageResponse<R> ok(PageResponse<R> pageResponse) {
+        if (pageResponse == null) {
+            return ok(List.of());
+        }
+        List<R> data = pageResponse.getData();
+        return ok(data != null ? data : List.of(),
+                pageResponse.getTotal(),
+                pageResponse.getSize(),
+                pageResponse.getCurrent());
+    }
+
+    /**
+     * 分页成功响应，包含 total/size/current 分页元信息
+     */
+    public static <R> WebPageResponse<R> ok(List<R> data, Long total, Integer size, Long current) {
+        WebPageResponse<R> response = of(HttpStatus.OK, data, MessageLevel.SILENT);
+        response.setTotal(total);
+        response.setSize(size);
+        response.setCurrent(current);
+        return response;
+    }
+
+    /**
+     * 根据分页结果构造响应
+     */
+    public static <R> WebPageResponse<R> fromPage(List<R> records, long total, long size, long current) {
+        return ok(records, total, (int) size, current);
+    }
+
+    /**
      * 建议使用，一个成功的响应，用户需要看到提示信息
      * @param data
      * @return
