@@ -22,12 +22,14 @@
         <dubbo.version>3.3.0</dubbo.version>
         <mybatis.version>3.0.3</mybatis.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-boot3.version>3.5.5</mybatis-plus-boot3.version>
         <feign.version>12.3</feign.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <jjwt.version>0.12.6</jjwt.version>
         <junit.version>5.10.2</junit.version>
         <lombok.version>1.18.30</lombok.version>
         <swagger-annotations.version>2.2.20</swagger-annotations.version>
+        <ttl.version>2.14.5</ttl.version>
     </properties>
 
     <dependencyManagement>
@@ -136,6 +138,21 @@
                 <groupId>com.github.walkvoid.wvframework</groupId>
                 <artifactId>wvframework-crypto</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.walkvoid.wvframework</groupId>
+                <artifactId>wvframework-httplog</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${ttl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus-boot3.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.walkvoid.wvframework</groupId>
