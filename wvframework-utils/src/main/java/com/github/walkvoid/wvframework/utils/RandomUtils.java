@@ -1,27 +1,123 @@
-package com.github.walkvoid.wvframework.mock.util;
+package com.github.walkvoid.wvframework.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 随机数据生成工具类
  *
  * @author walkvoid
  */
-public class RandomUtil {
+public class RandomUtils {
 
     private static final Random RANDOM = new Random();
     private static final String CHARSET_ALPHA = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String CHARSET_NUMERIC = "0123456789";
     private static final String CHARSET_ALPHANUMERIC = CHARSET_ALPHA + CHARSET_NUMERIC;
 
-    private RandomUtil() {
+    private static final Map<String, String> CHAR_SET_MAP = new HashMap<>();
+
+    private static final Pattern RULE_PATTERN = Pattern.compile(
+            "@(\\w+)\\[([^\\]]+)\\]|\\{([^}]+)}\\[([^\\]]+)\\]"
+    );
+
+    private RandomUtils() {
+
+    }
+
+    static {
+        CHAR_SET_MAP.put("digits", "0123456789");
+        CHAR_SET_MAP.put("upper", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        CHAR_SET_MAP.put("lower", "abcdefghijklmnopqrstuvwxyz");
+        CHAR_SET_MAP.put("letters", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        CHAR_SET_MAP.put("alnum", "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        CHAR_SET_MAP.put("space", " ");
+        CHAR_SET_MAP.put("hyphen", "-");
+        CHAR_SET_MAP.put("underscore", "_");
+    }
+
+
+    /**
+     * 从规则表达式中生成随机字符串
+     * @digits[4]表示从0123456789取出四个随机的数字
+     * @upper[0-3]表示从ABCDEFGHIJKLMNOPQRSTUVWXYZ取出0个或者3个字母，@表示需要从map找到对应的key，可以是0个，1个，2个或者3个
+     * @alnum[2-10]表示从0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ取出2个到10个字母，@表示需要从map找到对应的key
+     * {com,cn}[1],表示从com或者cn随机取出一个
+     * @space[4]表示4个空格字符
+     * @hyphen[1-2]表示1到2个横杠字符
+     *
+     * @param rule 规则表达式
+     * @return 生成的随机字符串
+     */
+    public static String fromRule(String rule) {
+        if (rule == null || rule.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        Matcher matcher = RULE_PATTERN.matcher(rule);
+
+        while (matcher.find()) {
+            String keyword = matcher.group(1);   // @digits → "digits"
+            String countOrRange = matcher.group(2);
+            String options = matcher.group(3);   // com,cn
+            String optCount = matcher.group(4);
+
+            if (keyword != null) {
+                String charset = CHAR_SET_MAP.get(keyword);
+                if (charset != null) {
+                    result.append(pickFromCharset(charset, countOrRange));
+                }
+            } else if (options != null) {
+                result.append(pickFromOptions(options, optCount));
+            }
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * 解析 [N] 或 [min-max] 得到实际取值的数量
+     */
+    public static int parseCount(String spec) {
+        int dashIdx = spec.indexOf('-');
+        if (dashIdx > 0) {
+            int min = Integer.parseInt(spec.substring(0, dashIdx).trim());
+            int max = Integer.parseInt(spec.substring(dashIdx + 1).trim());
+            return nextInt(min, max);
+        }
+        return Integer.parseInt(spec.trim());
+    }
+
+    /**
+     * 从字符集中随机取出指定数量的字符
+     */
+    private static String pickFromCharset(String charset, String countOrRange) {
+        int count = parseCount(countOrRange);
+        StringBuilder sb = new StringBuilder(count);
+        for (int i = 0; i < count; i++) {
+            sb.append(charset.charAt(RANDOM.nextInt(charset.length())));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 从逗号分隔的候选项中随机选取指定次数
+     */
+    private static String pickFromOptions(String optionsStr, String countOrRange) {
+        String[] options = optionsStr.split(",");
+        int count = parseCount(countOrRange);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(options[RANDOM.nextInt(options.length)].trim());
+        }
+        return sb.toString();
     }
 
     /**

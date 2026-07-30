@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockName;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -17,9 +17,15 @@ import java.util.List;
 @Component
 public class NameMockDataGenerator implements MockDataGenerator<String> {
 
+    private String i18nKey(){
+        return "mock.name";
+    }
+
+
     private static final List<String> ZH_CN_FIRST_NAMES = List.of(
             "伟", "芳", "娜", "秀英", "敏", "静", "丽", "强", "磊", "军",
             "洋", "勇", "艳", "杰", "娟", "涛", "明", "超", "秀兰", "霞"
+            ,"first[1]+last[2-3]","first[1]+@space+last[1]"
     );
 
     private static final List<String> ZH_CN_LAST_NAMES = List.of(
@@ -59,25 +65,25 @@ public class NameMockDataGenerator implements MockDataGenerator<String> {
 
     private String generateFullName(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            return RandomUtil.random(ZH_CN_LAST_NAMES) + RandomUtil.random(ZH_CN_FIRST_NAMES);
+            return RandomUtils.random(ZH_CN_LAST_NAMES) + RandomUtils.random(ZH_CN_FIRST_NAMES);
         } else {
-            return RandomUtil.random(EN_US_FIRST_NAMES) + " " + RandomUtil.random(EN_US_LAST_NAMES);
+            return RandomUtils.random(EN_US_FIRST_NAMES) + " " + RandomUtils.random(EN_US_LAST_NAMES);
         }
     }
 
     private String generateFirstName(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            return RandomUtil.random(ZH_CN_FIRST_NAMES);
+            return RandomUtils.random(ZH_CN_FIRST_NAMES);
         } else {
-            return RandomUtil.random(EN_US_FIRST_NAMES);
+            return RandomUtils.random(EN_US_FIRST_NAMES);
         }
     }
 
     private String generateLastName(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            return RandomUtil.random(ZH_CN_LAST_NAMES);
+            return RandomUtils.random(ZH_CN_LAST_NAMES);
         } else {
-            return RandomUtil.random(EN_US_LAST_NAMES);
+            return RandomUtils.random(EN_US_LAST_NAMES);
         }
     }
 

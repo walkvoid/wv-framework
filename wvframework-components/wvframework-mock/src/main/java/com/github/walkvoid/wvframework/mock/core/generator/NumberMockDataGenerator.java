@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockNumber;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -26,21 +26,21 @@ public class NumberMockDataGenerator implements MockDataGenerator<Object> {
         MockNumber.Type type = mockNumber.type();
         
         if (decimal || type == MockNumber.Type.FLOAT || type == MockNumber.Type.DOUBLE || type == MockNumber.Type.BIG_DECIMAL) {
-            return RandomUtil.nextDecimal(min, max, decimals);
+            return RandomUtils.nextDecimal(min, max, decimals);
         }
         
         switch (type) {
             case LONG:
-                return RandomUtil.nextLong(min, max);
+                return RandomUtils.nextLong(min, max);
             case FLOAT:
-                return (float) RandomUtil.nextDouble(min, max);
+                return (float) RandomUtils.nextDouble(min, max);
             case DOUBLE:
-                return RandomUtil.nextDouble(min, max);
+                return RandomUtils.nextDouble(min, max);
             case BIG_DECIMAL:
-                return RandomUtil.nextDecimal(min, max, decimals);
+                return RandomUtils.nextDecimal(min, max, decimals);
             case INTEGER:
             default:
-                return (int) RandomUtil.nextLong(min, max);
+                return (int) RandomUtils.nextLong(min, max);
         }
     }
 

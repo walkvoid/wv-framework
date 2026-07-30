@@ -17,6 +17,12 @@
     <description>数据 Mock 组件，支持 Controller/Feign/@HttpExchange/Dubbo 接口级数据 Mock</description>
 
     <dependencies>
+        <!-- wvframework-utils（通用工具类） -->
+        <dependency>
+            <groupId>com.github.walkvoid.wvframework</groupId>
+            <artifactId>wvframework-utils</artifactId>
+        </dependency>
+
         <!-- Spring Boot AOP（提供 Advisor + MethodInterceptor 支持） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

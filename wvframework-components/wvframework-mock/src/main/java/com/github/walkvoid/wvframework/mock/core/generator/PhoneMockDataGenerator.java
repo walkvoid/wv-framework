@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockPhone;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -51,14 +51,14 @@ public class PhoneMockDataGenerator implements MockDataGenerator<String> {
      */
     private String generateMobile(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            String prefix = RandomUtil.random(ZH_CN_MOBILE_PREFIXES);
-            String suffix = String.format("%08d", RandomUtil.nextInt(0, 99999999));
+            String prefix = RandomUtils.random(ZH_CN_MOBILE_PREFIXES);
+            String suffix = String.format("%08d", RandomUtils.nextInt(0, 99999999));
             return prefix + suffix;
         } else {
             // 美国手机号格式
-            String areaCode = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtil.nextInt(1000, 9999));
+            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return "(" + areaCode + ") " + prefix + "-" + suffix;
         }
     }
@@ -68,14 +68,14 @@ public class PhoneMockDataGenerator implements MockDataGenerator<String> {
      */
     private String generateTelephone(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            String areaCode = RandomUtil.random(ZH_CN_AREA_CODES);
-            String prefix = String.format("%03d", RandomUtil.nextInt(100, 999));
-            String suffix = String.format("%04d", RandomUtil.nextInt(1000, 9999));
+            String areaCode = RandomUtils.random(ZH_CN_AREA_CODES);
+            String prefix = String.format("%03d", RandomUtils.nextInt(100, 999));
+            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return areaCode + "-" + prefix + "-" + suffix;
         } else {
-            String areaCode = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtil.nextInt(1000, 9999));
+            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return "(" + areaCode + ") " + prefix + "-" + suffix;
         }
     }
@@ -85,14 +85,14 @@ public class PhoneMockDataGenerator implements MockDataGenerator<String> {
      */
     private String generateFax(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            String areaCode = RandomUtil.random(ZH_CN_AREA_CODES);
-            String prefix = String.format("%03d", RandomUtil.nextInt(100, 999));
-            String suffix = String.format("%04d", RandomUtil.nextInt(1000, 9999));
+            String areaCode = RandomUtils.random(ZH_CN_AREA_CODES);
+            String prefix = String.format("%03d", RandomUtils.nextInt(100, 999));
+            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return areaCode + "-" + prefix + "-" + suffix;
         } else {
-            String areaCode = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtil.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtil.nextInt(1000, 9999));
+            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return "+1-" + areaCode + "-" + prefix + "-" + suffix;
         }
     }

@@ -17,13 +17,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@MockString(configKey = "mock.name")
 public @interface MockName {
 
     /**
      * 姓名类型：firstName（名）、lastName（姓）、fullName（全名）
      */
-    Type type() default Type.FULL_NAME;
+    String[] rules() default {};
+
+    /**
+     * 姓名类型：firstName（名）、lastName（姓）、fullName（全名）
+     */
+    String i18nKey() default "mocke.name";
 
     /**
      * 多语言支持
@@ -32,9 +36,4 @@ public @interface MockName {
      */
     String lang() default "AUTO";
 
-    enum Type {
-        FIRST_NAME,
-        LAST_NAME,
-        FULL_NAME
-    }
 }

@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockDate;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -33,10 +33,10 @@ public class DateMockDataGenerator implements MockDataGenerator<String> {
         if (withTime) {
             LocalDateTime fromDateTime = from.atStartOfDay();
             LocalDateTime toDateTime = to.atTime(23, 59, 59);
-            LocalDateTime randomDateTime = RandomUtil.nextDateTime(fromDateTime, toDateTime);
+            LocalDateTime randomDateTime = RandomUtils.nextDateTime(fromDateTime, toDateTime);
             return randomDateTime.format(DateTimeFormatter.ofPattern(format));
         } else {
-            LocalDate randomDate = RandomUtil.nextDate(from, to);
+            LocalDate randomDate = RandomUtils.nextDate(from, to);
             return randomDate.format(DateTimeFormatter.ofPattern(format));
         }
     }

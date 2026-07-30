@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockEmail;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -38,7 +38,7 @@ public class EmailMockDataGenerator implements MockDataGenerator<String> {
         
         String domain = mockEmail.domain();
         if (domain == null || domain.isEmpty()) {
-            domain = RandomUtil.random(COMMON_DOMAINS);
+            domain = RandomUtils.random(COMMON_DOMAINS);
         }
         
         // 生成随机用户名
@@ -49,16 +49,16 @@ public class EmailMockDataGenerator implements MockDataGenerator<String> {
 
     private String generateUsername(String lang) {
         if ("zh-CN".equalsIgnoreCase(lang)) {
-            String first = RandomUtil.random(ZH_CN_FIRST_NAMES);
-            String last = RandomUtil.random(ZH_CN_LAST_NAMES);
-            String separator = RandomUtil.random("_", ".", "");
-            String number = RandomUtil.nextBoolean() ? String.valueOf(RandomUtil.nextInt(1, 999)) : "";
+            String first = RandomUtils.random(ZH_CN_FIRST_NAMES);
+            String last = RandomUtils.random(ZH_CN_LAST_NAMES);
+            String separator = RandomUtils.random("_", ".", "");
+            String number = RandomUtils.nextBoolean() ? String.valueOf(RandomUtils.nextInt(1, 999)) : "";
             return first + separator + last + number;
         } else {
-            String first = RandomUtil.nextString(RandomUtil.nextInt(4, 8), "alpha").toLowerCase();
-            String last = RandomUtil.nextString(RandomUtil.nextInt(4, 10), "alpha").toLowerCase();
-            String separator = RandomUtil.random("_", ".", "");
-            String number = RandomUtil.nextBoolean() ? String.valueOf(RandomUtil.nextInt(1, 999)) : "";
+            String first = RandomUtils.nextString(RandomUtils.nextInt(4, 8), "alpha").toLowerCase();
+            String last = RandomUtils.nextString(RandomUtils.nextInt(4, 10), "alpha").toLowerCase();
+            String separator = RandomUtils.random("_", ".", "");
+            String number = RandomUtils.nextBoolean() ? String.valueOf(RandomUtils.nextInt(1, 999)) : "";
             return first + separator + last + number;
         }
     }

@@ -6,7 +6,7 @@ import com.github.walkvoid.wvframework.mock.core.generator.MockDataGenerator;
 import com.github.walkvoid.wvframework.mock.core.generator.MockDataGeneratorRegistry;
 import com.github.walkvoid.wvframework.mock.store.MockDataStore;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -145,34 +145,34 @@ public class MockObjectFactory {
 
         // 基本类型处理
         if (clazz == String.class) {
-            return RandomUtil.nextString(RandomUtil.nextInt(6, 20), "alphanumeric");
+            return RandomUtils.nextString(RandomUtils.nextInt(6, 20), "alphanumeric");
         }
         if (clazz == Integer.class || clazz == int.class) {
-            return RandomUtil.nextInt(1, 1000);
+            return RandomUtils.nextInt(1, 1000);
         }
         if (clazz == Long.class || clazz == long.class) {
-            return RandomUtil.nextLong(1, 10000);
+            return RandomUtils.nextLong(1, 10000);
         }
         if (clazz == Double.class || clazz == double.class) {
-            return RandomUtil.nextDouble(0, 1000);
+            return RandomUtils.nextDouble(0, 1000);
         }
         if (clazz == Float.class || clazz == float.class) {
-            return (float) RandomUtil.nextDouble(0, 1000);
+            return (float) RandomUtils.nextDouble(0, 1000);
         }
         if (clazz == Boolean.class || clazz == boolean.class) {
-            return RandomUtil.nextBoolean();
+            return RandomUtils.nextBoolean();
         }
         if (clazz == Date.class) {
-            return new Date(RandomUtil.nextLong(System.currentTimeMillis() - 365L * 24 * 3600 * 1000, System.currentTimeMillis()));
+            return new Date(RandomUtils.nextLong(System.currentTimeMillis() - 365L * 24 * 3600 * 1000, System.currentTimeMillis()));
         }
         if (clazz == java.time.LocalDate.class) {
-            return RandomUtil.nextDate(
+            return RandomUtils.nextDate(
                     java.time.LocalDate.now().minusYears(5),
                     java.time.LocalDate.now()
             );
         }
         if (clazz == java.time.LocalDateTime.class) {
-            return RandomUtil.nextDateTime(
+            return RandomUtils.nextDateTime(
                     java.time.LocalDateTime.now().minusYears(5),
                     java.time.LocalDateTime.now()
             );
@@ -240,22 +240,22 @@ public class MockObjectFactory {
         Class<?> fieldType = field.getType();
 
         if (fieldType == String.class) {
-            return RandomUtil.nextString(RandomUtil.nextInt(6, 20), "alphanumeric");
+            return RandomUtils.nextString(RandomUtils.nextInt(6, 20), "alphanumeric");
         }
         if (fieldType == Integer.class || fieldType == int.class) {
-            return RandomUtil.nextInt(1, 1000);
+            return RandomUtils.nextInt(1, 1000);
         }
         if (fieldType == Long.class || fieldType == long.class) {
-            return RandomUtil.nextLong(1, 10000);
+            return RandomUtils.nextLong(1, 10000);
         }
         if (fieldType == Double.class || fieldType == double.class) {
-            return RandomUtil.nextDouble(0, 1000);
+            return RandomUtils.nextDouble(0, 1000);
         }
         if (fieldType == Boolean.class || fieldType == boolean.class) {
-            return RandomUtil.nextBoolean();
+            return RandomUtils.nextBoolean();
         }
         if (fieldType == java.math.BigDecimal.class) {
-            return RandomUtil.nextDecimal(0, 1000, 2);
+            return RandomUtils.nextDecimal(0, 1000, 2);
         }
 
         return null;

@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockIdCardNo;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -48,23 +48,23 @@ public class IdCardNoMockDataGenerator implements MockDataGenerator<String> {
         StringBuilder sb = new StringBuilder();
         
         // 1-2位：省代码
-        sb.append(RandomUtil.random(ZH_CN_PROVINCES));
+        sb.append(RandomUtils.random(ZH_CN_PROVINCES));
         
         // 3-4位：市代码
-        sb.append(String.format("%02d", RandomUtil.nextInt(1, 99)));
+        sb.append(String.format("%02d", RandomUtils.nextInt(1, 99)));
         
         // 5-6位：区代码
-        sb.append(String.format("%02d", RandomUtil.nextInt(1, 99)));
+        sb.append(String.format("%02d", RandomUtils.nextInt(1, 99)));
         
         // 7-14位：出生日期
-        LocalDate birthDate = RandomUtil.nextDate(
+        LocalDate birthDate = RandomUtils.nextDate(
                 LocalDate.of(1960, 1, 1),
                 LocalDate.of(2005, 12, 31)
         );
         sb.append(birthDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         
         // 15-17位：顺序码
-        sb.append(String.format("%03d", RandomUtil.nextInt(1, 999)));
+        sb.append(String.format("%03d", RandomUtils.nextInt(1, 999)));
         
         // 18位：校验码
         sb.append(calculateCheckCode(sb.toString()));
@@ -95,7 +95,7 @@ public class IdCardNoMockDataGenerator implements MockDataGenerator<String> {
         // 护照号格式：E + 8位数字
         sb.append("E");
         for (int i = 0; i < 8; i++) {
-            sb.append(RandomUtil.nextInt(0, 9));
+            sb.append(RandomUtils.nextInt(0, 9));
         }
         return sb.toString();
     }
@@ -107,7 +107,7 @@ public class IdCardNoMockDataGenerator implements MockDataGenerator<String> {
         StringBuilder sb = new StringBuilder();
         // 驾驶证号格式：12位数字
         for (int i = 0; i < 12; i++) {
-            sb.append(RandomUtil.nextInt(0, 9));
+            sb.append(RandomUtils.nextInt(0, 9));
         }
         return sb.toString();
     }

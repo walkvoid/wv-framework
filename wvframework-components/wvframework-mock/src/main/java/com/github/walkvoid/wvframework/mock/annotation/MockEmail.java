@@ -22,12 +22,18 @@ public @interface MockEmail {
      * 邮箱域名
      * 为空时随机选择常用域名
      */
-    String domain() default "";
+    String[] rules() default {"@alnum[5-10]@at@letters[4-8]@idot{com,cn}"};
+
+    /**
+     * 姓名类型：firstName（名）、lastName（姓）、fullName（全名）
+     */
+    String i18nKey() default "mocke.email";
 
     /**
      * 多语言支持
      * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）、ko-KR（韩文）
      * AUTO：自动获取当前环境的多语言配置
+     * NONE：不使用多语言配置
      */
-    String lang() default "AUTO";
+    String lang() default "NONE";
 }

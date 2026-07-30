@@ -2,7 +2,7 @@ package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockAddress;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
-import com.github.walkvoid.wvframework.mock.util.RandomUtil;
+import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -79,18 +79,18 @@ public class AddressMockDataGenerator implements MockDataGenerator<String> {
     private String generateZhCnAddress(MockAddress.Level level) {
         switch (level) {
             case PROVINCE:
-                return RandomUtil.random(ZH_CN_PROVINCES);
+                return RandomUtils.random(ZH_CN_PROVINCES);
             case CITY:
-                return RandomUtil.random(ZH_CN_CITIES);
+                return RandomUtils.random(ZH_CN_CITIES);
             case DISTRICT:
-                return RandomUtil.random(ZH_CN_DISTRICTS);
+                return RandomUtils.random(ZH_CN_DISTRICTS);
             case DETAIL:
                 return generateDetailAddress(ZH_CN_STREETS);
             case FULL:
             default:
-                String province = RandomUtil.random(ZH_CN_PROVINCES);
-                String city = RandomUtil.random(ZH_CN_CITIES);
-                String district = RandomUtil.random(ZH_CN_DISTRICTS);
+                String province = RandomUtils.random(ZH_CN_PROVINCES);
+                String city = RandomUtils.random(ZH_CN_CITIES);
+                String district = RandomUtils.random(ZH_CN_DISTRICTS);
                 String detail = generateDetailAddress(ZH_CN_STREETS);
                 return province + city + district + detail;
         }
@@ -100,26 +100,26 @@ public class AddressMockDataGenerator implements MockDataGenerator<String> {
         switch (level) {
             case PROVINCE:
             case CITY:
-                return RandomUtil.random(EN_US_CITIES);
+                return RandomUtils.random(EN_US_CITIES);
             case DISTRICT:
-                return RandomUtil.random(EN_US_STATES);
+                return RandomUtils.random(EN_US_STATES);
             case DETAIL:
                 return generateDetailAddress(EN_US_STREETS);
             case FULL:
             default:
-                String number = String.valueOf(RandomUtil.nextInt(1, 9999));
-                String street = RandomUtil.random(EN_US_STREETS);
-                String city = RandomUtil.random(EN_US_CITIES);
-                String state = RandomUtil.random(EN_US_STATES);
-                String zip = String.format("%05d", RandomUtil.nextInt(10000, 99999));
+                String number = String.valueOf(RandomUtils.nextInt(1, 9999));
+                String street = RandomUtils.random(EN_US_STREETS);
+                String city = RandomUtils.random(EN_US_CITIES);
+                String state = RandomUtils.random(EN_US_STATES);
+                String zip = String.format("%05d", RandomUtils.nextInt(10000, 99999));
                 return number + " " + street + ", " + city + ", " + state + " " + zip;
         }
     }
 
     private String generateDetailAddress(List<String> streets) {
-        String number = String.valueOf(RandomUtil.nextInt(1, 999));
-        String street = RandomUtil.random(streets);
-        String unit = RandomUtil.nextBoolean() ? "" + RandomUtil.nextInt(1, 30) + "0" + RandomUtil.nextInt(1, 9) + "室" : "";
+        String number = String.valueOf(RandomUtils.nextInt(1, 999));
+        String street = RandomUtils.random(streets);
+        String unit = RandomUtils.nextBoolean() ? "" + RandomUtils.nextInt(1, 30) + "0" + RandomUtils.nextInt(1, 9) + "室" : "";
         return number + street + unit;
     }
 

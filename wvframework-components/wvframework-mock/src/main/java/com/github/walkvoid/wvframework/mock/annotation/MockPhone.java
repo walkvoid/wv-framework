@@ -20,21 +20,21 @@ import java.lang.annotation.Target;
 public @interface MockPhone {
 
     /**
-     * 电话类型：mobile（手机）、telephone（座机）、fax（传真）、any（任意）
+     * 邮箱域名
+     * 为空时随机选择常用域名
      */
-    Type type() default Type.MOBILE;
+    String[] rules() default {};
 
     /**
-     * 多语言支持（不同地区电话格式不同）
-     * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）等
+     * 姓名类型：firstName（名）、lastName（姓）、fullName（全名）
+     */
+    String i18nKey() default "mocke.phone";
+
+    /**
+     * 多语言支持
+     * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）、ko-KR（韩文）
      * AUTO：自动获取当前环境的多语言配置
+     * NONE：不使用多语言配置
      */
     String lang() default "AUTO";
-
-    enum Type {
-        MOBILE,
-        TELEPHONE,
-        FAX,
-        ANY
-    }
 }
