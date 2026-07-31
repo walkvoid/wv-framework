@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
-
 import com.github.walkvoid.wvframework.mock.annotation.MockPhone;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
+import com.github.walkvoid.wvframework.mock.util.MockRuleResolver;
 import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -30,71 +30,74 @@ public class PhoneMockDataGenerator implements MockDataGenerator<String> {
     @Override
     public String generate(Field field, Object annotation, String lang) {
         MockPhone mockPhone = (MockPhone) annotation;
-        String actualLang = MockI18nUtil.resolveLang(mockPhone.lang());
-        
+        String mode = mockPhone.lang();
         MockPhone.Type type = mockPhone.type();
-        
+
+        if (MockRuleResolver.LANG_FIXED.equalsIgnoreCase(mode)) {
+            return mockPhone.fixedValue();
+        }
+
+        String rule = MockRuleResolver.resolve(mode, mockPhone.i18nKey(), mockPhone.rules());
+        if (rule != null && !rule.isEmpty()) {
+            String fromRule = RandomUtils.fromRule(rule);
+            if (!fromRule.isEmpty()) {
+                return fromRule;
+            }
+        }
+
+        String actualLang = MockI18nUtil.resolveLang(mode);
+        return legacyGenerate(actualLang, type);
+    }
+
+    private String legacyGenerate(String lang, MockPhone.Type type) {
         switch (type) {
             case TELEPHONE:
-                return generateTelephone(actualLang);
+                return generateTelephone(lang);
             case FAX:
-                return generateFax(actualLang);
+                return generateFax(lang);
             case MOBILE:
             case ANY:
             default:
-                return generateMobile(actualLang);
+                return generateMobile(lang);
         }
     }
 
-    /**
-     * 生成手机号
-     */
     private String generateMobile(String lang) {
-        if ("zh-CN".equalsIgnoreCase(lang)) {
+        if ("zh-CN".equalsIgnoreCase(lang) || "zh_CN".equalsIgnoreCase(lang)) {
             String prefix = RandomUtils.random(ZH_CN_MOBILE_PREFIXES);
             String suffix = String.format("%08d", RandomUtils.nextInt(0, 99999999));
             return prefix + suffix;
-        } else {
-            // 美国手机号格式
-            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
-            return "(" + areaCode + ") " + prefix + "-" + suffix;
         }
+        String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
+        return "(" + areaCode + ") " + prefix + "-" + suffix;
     }
 
-    /**
-     * 生成座机号码
-     */
     private String generateTelephone(String lang) {
-        if ("zh-CN".equalsIgnoreCase(lang)) {
+        if ("zh-CN".equalsIgnoreCase(lang) || "zh_CN".equalsIgnoreCase(lang)) {
             String areaCode = RandomUtils.random(ZH_CN_AREA_CODES);
             String prefix = String.format("%03d", RandomUtils.nextInt(100, 999));
             String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return areaCode + "-" + prefix + "-" + suffix;
-        } else {
-            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
-            return "(" + areaCode + ") " + prefix + "-" + suffix;
         }
+        String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
+        return "(" + areaCode + ") " + prefix + "-" + suffix;
     }
 
-    /**
-     * 生成传真号码
-     */
     private String generateFax(String lang) {
-        if ("zh-CN".equalsIgnoreCase(lang)) {
+        if ("zh-CN".equalsIgnoreCase(lang) || "zh_CN".equalsIgnoreCase(lang)) {
             String areaCode = RandomUtils.random(ZH_CN_AREA_CODES);
             String prefix = String.format("%03d", RandomUtils.nextInt(100, 999));
             String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
             return areaCode + "-" + prefix + "-" + suffix;
-        } else {
-            String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
-            String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
-            return "+1-" + areaCode + "-" + prefix + "-" + suffix;
         }
+        String areaCode = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String prefix = String.format("%03d", RandomUtils.nextInt(200, 999));
+        String suffix = String.format("%04d", RandomUtils.nextInt(1000, 9999));
+        return "+1-" + areaCode + "-" + prefix + "-" + suffix;
     }
 
     @Override

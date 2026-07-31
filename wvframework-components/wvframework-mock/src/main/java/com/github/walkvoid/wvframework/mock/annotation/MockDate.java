@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * Mock 日期时间数据注解
- * 
+ *
  * <p>根据字段语义生成符合业务含义的 Mock 数据</p>
  *
  * @author walkvoid
@@ -17,6 +17,31 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface MockDate {
+
+    /**
+     * 规则数组，{@link #lang()} = {@code "RULES"} 时生效。
+     */
+    String[] rules() default {};
+
+    /**
+     * 多语言文件 key，默认映射 {@code i18n/mock/date_{locale}.properties}。
+     */
+    String i18nKey() default "date";
+
+    /**
+     * 多语言支持，语义见 {@link MockName#lang()}。
+     */
+    String lang() default "AUTO";
+
+    /**
+     * 自定义 generator 的 bean 名称，仅 {@code GENER} 模式生效。
+     */
+    String generator() default "";
+
+    /**
+     * 固定值，仅 {@code FIXED} 模式生效。
+     */
+    String fixedValue() default "";
 
     /**
      * 日期格式
@@ -42,11 +67,4 @@ public @interface MockDate {
      * 是否包含时间部分
      */
     boolean withTime() default false;
-
-    /**
-     * 多语言支持
-     * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）、ko-KR（韩文）
-     * AUTO：自动获取当前环境的多语言配置
-     */
-    String lang() default "AUTO";
 }

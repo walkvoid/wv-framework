@@ -1,9 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
-
 import com.github.walkvoid.wvframework.mock.annotation.MockString;
-import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
+import com.github.walkvoid.wvframework.mock.util.MockRuleResolver;
 import com.github.walkvoid.wvframework.utils.RandomUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -16,66 +14,62 @@ import java.lang.reflect.Field;
 @Component
 public class StringMockDataGenerator implements MockDataGenerator<String> {
 
-    @Value("${mock.string.config.location:mock-strings.properties}")
-    private String configLocation;
-
     @Override
     public String generate(Field field, Object annotation, String lang) {
         MockString mockString = (MockString) annotation;
-        
-        // 解析语言环境
-        String actualLang = MockI18nUtil.resolveLang(mockString.lang());
-        
-        String prefix = mockString.prefix();
-        String suffix = mockString.suffix();
-        
-        String result;
-        
-        // 1. 优先使用固定值列表
+        String mode = mockString.lang();
+
+        if (MockRuleResolver.LANG_FIXED.equalsIgnoreCase(mode)) {
+            return wrap(mockString.fixedValue(), mockString.prefix(), mockString.suffix());
+        }
+
+        // LANG_GENER 与 LANG_NONE 在 MockRuleResolver 中都返回 null，自然走 legacyGenerate；
+        // 这里不再额外打 warn 噪日志。
+
+        String rule = MockRuleResolver.resolve(mode, mockString.i18nKey(), mockString.rules());
+        if (rule != null && !rule.isEmpty()) {
+            String fromRule = RandomUtils.fromRule(rule);
+            if (!fromRule.isEmpty()) {
+                return wrap(fromRule, mockString.prefix(), mockString.suffix());
+            }
+        }
+
+        String core;
         if (mockString.values() != null && mockString.values().length > 0) {
-            result = RandomUtils.random(mockString.values());
-        }
-        // 2. 使用配置文件
-        else if (mockString.configKey() != null && !mockString.configKey().isEmpty()) {
-            result = generateFromConfig(mockString.configKey(), actualLang);
-        }
-        // 3. 根据长度和字符集生成随机字符串
-        else {
+            core = RandomUtils.random(mockString.values());
+        } else {
             int[] length = parseLength(mockString.length());
-            result = RandomUtils.nextString(
-                    RandomUtils.nextInt(length[0], length[1]),
-                    mockString.charset()
-            );
+            core = RandomUtils.nextString(RandomUtils.nextInt(length[0], length[1]), mockString.charset());
         }
-        
-        return prefix + result + suffix;
+        return wrap(core, mockString.prefix(), mockString.suffix());
     }
 
-    /**
-     * 从配置获取值
-     */
-    private String generateFromConfig(String configKey, String lang) {
-        // 这里可以扩展为从配置文件读取
-        // 暂时使用默认值
-        return RandomUtils.nextString(RandomUtils.nextInt(6, 12), "alphanumeric");
+    private static String wrap(String core, String prefix, String suffix) {
+        if (core == null) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        if (prefix != null && !prefix.isEmpty()) {
+            sb.append(prefix);
+        }
+        sb.append(core);
+        if (suffix != null && !suffix.isEmpty()) {
+            sb.append(suffix);
+        }
+        return sb.toString();
     }
 
-    /**
-     * 解析长度字符串
-     */
-    private int[] parseLength(String length) {
+    private static int[] parseLength(String length) {
         if (length == null || length.isEmpty()) {
             return new int[]{6, 20};
         }
-        
         try {
-            if (length.contains("-")) {
-                String[] parts = length.split("-");
-                return new int[]{Integer.parseInt(parts[0].trim()), Integer.parseInt(parts[1].trim())};
-            } else {
-                int len = Integer.parseInt(length.trim());
-                return new int[]{len, len};
+            int dash = length.indexOf('-');
+            if (dash > 0) {
+                return new int[]{Integer.parseInt(length.substring(0, dash).trim()), Integer.parseInt(length.substring(dash + 1).trim())};
             }
+            int len = Integer.parseInt(length.trim());
+            return new int[]{len, len};
         } catch (Exception e) {
             return new int[]{6, 20};
         }

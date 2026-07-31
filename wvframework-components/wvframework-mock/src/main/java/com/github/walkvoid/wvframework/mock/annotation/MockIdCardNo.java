@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * Mock 身份证号数据注解
- * 
+ *
  * <p>根据字段语义生成符合业务含义的 Mock 数据</p>
  * <p>生成18位身份证号码</p>
  *
@@ -20,16 +20,35 @@ import java.lang.annotation.Target;
 public @interface MockIdCardNo {
 
     /**
-     * 证件类型：idCard（身份证）、passport（护照）、driverLicense（驾驶证）
+     * 规则数组，{@link #lang()} = {@code "RULES"} 时生效。
      */
-    Type type() default Type.ID_CARD;
+    String[] rules() default {};
+
+    /**
+     * 多语言文件 key，默认映射 {@code i18n/mock/idcardno_{locale}.properties}。
+     */
+    String i18nKey() default "idcardno";
 
     /**
      * 多语言支持（不同地区证件格式不同）
-     * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）等
-     * AUTO：自动获取当前环境的多语言配置
+     * <p>语义见 {@link MockName#lang()}。</p>
      */
     String lang() default "AUTO";
+
+    /**
+     * 自定义 generator 的 bean 名称，仅 {@code GENER} 模式生效。
+     */
+    String generator() default "";
+
+    /**
+     * 固定值，仅 {@code FIXED} 模式生效。
+     */
+    String fixedValue() default "";
+
+    /**
+     * 证件类型：idCard（身份证）、passport（护照）、driverLicense（驾驶证）
+     */
+    Type type() default Type.ID_CARD;
 
     enum Type {
         ID_CARD,

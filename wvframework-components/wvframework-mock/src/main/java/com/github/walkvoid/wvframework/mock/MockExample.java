@@ -84,7 +84,7 @@ public class MockExample {
      * 示例3：复杂 DTO 使用各种字段级 Mock 注解
      */
     public static class OrderDTO {
-        @MockString(configKey = "mock.order.no", length = "16-20", charset = "alphanumeric")
+        @MockString(length = "16-20", charset = "alphanumeric")
         private String orderNo;
 
         @MockName
@@ -93,7 +93,7 @@ public class MockExample {
         @MockPhone(type = MockPhone.Type.MOBILE)
         private String contactPhone;
 
-        @MockEmail(domain = "company.com")
+        @MockEmail(lang = "FIXED", fixedValue = "noreply@company.com")
         private String email;
 
         @MockAddress(level = MockAddress.Level.DETAIL)

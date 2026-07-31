@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
-
 import com.github.walkvoid.wvframework.mock.annotation.MockAddress;
 import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
+import com.github.walkvoid.wvframework.mock.util.MockRuleResolver;
 import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +17,10 @@ import java.util.List;
 public class AddressMockDataGenerator implements MockDataGenerator<String> {
 
     private static final List<String> ZH_CN_PROVINCES = List.of(
-            "北京市", "天津市", "上海市", "重庆市", "河北省", "山西省", "辽宁省", "吉林省", 
-            "黑龙江省", "江苏省", "浙江省", "安徽省", "福建省", "江西省", "山东省", "河南省", 
-            "湖北省", "湖南省", "广东省", "海南省", "四川省", "贵州省", "云南省", "陕西省", 
-            "甘肃省", "青海省", "台湾省", "内蒙古自治区", "广西壮族自治区", "西藏自治区", 
+            "北京市", "天津市", "上海市", "重庆市", "河北省", "山西省", "辽宁省", "吉林省",
+            "黑龙江省", "江苏省", "浙江省", "安徽省", "福建省", "江西省", "山东省", "河南省",
+            "湖北省", "湖南省", "广东省", "海南省", "四川省", "贵州省", "云南省", "陕西省",
+            "甘肃省", "青海省", "台湾省", "内蒙古自治区", "广西壮族自治区", "西藏自治区",
             "宁夏回族自治区", "新疆维吾尔自治区", "香港特别行政区", "澳门特别行政区"
     );
 
@@ -41,39 +41,68 @@ public class AddressMockDataGenerator implements MockDataGenerator<String> {
             "民主路", "胜利街", "友谊街", "团结路", "幸福路", "光明路", "振兴路", "朝阳街"
     );
 
-    private static final List<String> EN_US_CITIES = List.of(
-            "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", 
-            "San Antonio", "San Diego", "Dallas", "San Jose", "Austin", "Jacksonville",
-            "San Francisco", "Columbus", "Indianapolis", "Fort Worth", "Charlotte"
-    );
-
     private static final List<String> EN_US_STATES = List.of(
             "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
             "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ"
+            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    );
+
+    private static final List<String> EN_US_CITIES = List.of(
+            "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia",
+            "San Antonio", "San Diego", "Dallas", "San Jose", "Austin", "Jacksonville",
+            "San Francisco", "Columbus", "Indianapolis", "Fort Worth", "Charlotte",
+            "Seattle", "Denver", "Washington", "Boston", "Nashville", "Baltimore",
+            "Oklahoma City", "Portland", "Las Vegas", "Detroit", "Memphis", "Louisville"
+    );
+
+    private static final List<String> EN_US_NEIGHBORHOODS = List.of(
+            "Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island",
+            "Downtown", "Midtown", "Hollywood", "Beverly Hills", "Chelsea",
+            "SoHo", "Tribeca", "Mission District", "Capitol Hill", "French Quarter",
+            "The Loop", "Magnificent Mile", "Back Bay", "Georgetown", "Old Town"
     );
 
     private static final List<String> EN_US_STREETS = List.of(
-            "Main St", "Oak Ave", "Maple Dr", "Cedar Ln", "Pine St", "Elm St", 
+            "Main St", "Oak Ave", "Maple Dr", "Cedar Ln", "Pine St", "Elm St",
             "Washington Blvd", "Park Ave", "Lake Dr", "Hill Rd", "River Rd", "Forest Ave"
     );
 
     @Override
     public String generate(Field field, Object annotation, String lang) {
         MockAddress mockAddress = (MockAddress) annotation;
-        String actualLang = MockI18nUtil.resolveLang(mockAddress.lang());
-        
+        String mode = mockAddress.lang();
         MockAddress.Level level = mockAddress.level();
-        
-        return generateAddress(actualLang, level);
+
+        if (MockRuleResolver.LANG_FIXED.equalsIgnoreCase(mode)) {
+            return mockAddress.fixedValue();
+        }
+
+        // LANG_RULES 走用户自定义规则（不受 level 约束）；
+        // LANG_AUTO / 具体 locale 走 i18n 规则，但内置 i18n 规则对应 FULL 地址，
+        // 当 level != FULL 时直接走 legacyGenerate，避免规则路径覆盖 level 语义。
+        boolean useRulePath = MockRuleResolver.LANG_RULES.equalsIgnoreCase(mode)
+                || level == MockAddress.Level.FULL;
+        if (useRulePath) {
+            String rule = MockRuleResolver.resolve(mode, mockAddress.i18nKey(), mockAddress.rules());
+            if (rule != null && !rule.isEmpty()) {
+                String fromRule = RandomUtils.fromRule(rule);
+                if (!fromRule.isEmpty()) {
+                    return fromRule;
+                }
+            }
+        }
+
+        String actualLang = MockI18nUtil.resolveLang(mode);
+        return legacyGenerate(actualLang, level);
     }
 
-    private String generateAddress(String lang, MockAddress.Level level) {
-        if ("zh-CN".equalsIgnoreCase(lang)) {
+    private String legacyGenerate(String lang, MockAddress.Level level) {
+        if ("zh-CN".equalsIgnoreCase(lang) || "zh_CN".equalsIgnoreCase(lang)) {
             return generateZhCnAddress(level);
-        } else {
-            return generateEnUsAddress(level);
         }
+        return generateEnUsAddress(level);
     }
 
     private String generateZhCnAddress(MockAddress.Level level) {
@@ -99,10 +128,11 @@ public class AddressMockDataGenerator implements MockDataGenerator<String> {
     private String generateEnUsAddress(MockAddress.Level level) {
         switch (level) {
             case PROVINCE:
+                return RandomUtils.random(EN_US_STATES);
             case CITY:
                 return RandomUtils.random(EN_US_CITIES);
             case DISTRICT:
-                return RandomUtils.random(EN_US_STATES);
+                return RandomUtils.random(EN_US_NEIGHBORHOODS);
             case DETAIL:
                 return generateDetailAddress(EN_US_STREETS);
             case FULL:

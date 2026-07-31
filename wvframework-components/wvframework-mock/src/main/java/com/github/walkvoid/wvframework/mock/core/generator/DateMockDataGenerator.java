@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockDate;
-import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
+import com.github.walkvoid.wvframework.mock.util.MockRuleResolver;
 import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -21,41 +21,46 @@ public class DateMockDataGenerator implements MockDataGenerator<String> {
     @Override
     public String generate(Field field, Object annotation, String lang) {
         MockDate mockDate = (MockDate) annotation;
-        String actualLang = MockI18nUtil.resolveLang(mockDate.lang());
-        
+        String mode = mockDate.lang();
+
+        if (MockRuleResolver.LANG_FIXED.equalsIgnoreCase(mode)) {
+            return mockDate.fixedValue();
+        }
+
+        String rule = MockRuleResolver.resolve(mode, mockDate.i18nKey(), mockDate.rules());
+        if (rule != null && !rule.isEmpty()) {
+            String fromRule = RandomUtils.fromRule(rule);
+            if (!fromRule.isEmpty()) {
+                return fromRule;
+            }
+        }
+
         String format = mockDate.format();
         boolean withTime = mockDate.withTime();
-        
-        // 解析日期范围
+
         LocalDate from = parseDate(mockDate.from(), -5);
         LocalDate to = parseDate(mockDate.to(), 0);
-        
+
         if (withTime) {
             LocalDateTime fromDateTime = from.atStartOfDay();
             LocalDateTime toDateTime = to.atTime(23, 59, 59);
             LocalDateTime randomDateTime = RandomUtils.nextDateTime(fromDateTime, toDateTime);
             return randomDateTime.format(DateTimeFormatter.ofPattern(format));
-        } else {
-            LocalDate randomDate = RandomUtils.nextDate(from, to);
-            return randomDate.format(DateTimeFormatter.ofPattern(format));
         }
+        LocalDate randomDate = RandomUtils.nextDate(from, to);
+        return randomDate.format(DateTimeFormatter.ofPattern(format));
     }
 
-    /**
-     * 解析日期字符串
-     */
     private LocalDate parseDate(String dateStr, int yearOffset) {
         if (dateStr == null || dateStr.isEmpty()) {
-            LocalDate now = LocalDate.now();
-            return now.plusYears(yearOffset);
+            return LocalDate.now().plusYears(yearOffset);
         }
-        
+
         try {
             if (dateStr.contains(" ")) {
                 return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
-            } else {
-                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         } catch (Exception e) {
             return LocalDate.now().plusYears(yearOffset);
         }

@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 
 /**
  * Mock 电话号码数据注解
- * 
+ *
  * <p>根据字段语义生成符合业务含义的 Mock 数据</p>
- * <p>支持生成手机号、座机等多种格式</p>
+ * <p>支持生成手机号、座机、传真等多种格式</p>
  *
  * @author walkvoid
  */
@@ -20,21 +20,39 @@ import java.lang.annotation.Target;
 public @interface MockPhone {
 
     /**
-     * 邮箱域名
-     * 为空时随机选择常用域名
+     * 规则数组，{@link #lang()} = {@code "RULES"} 时生效。
      */
     String[] rules() default {};
 
     /**
-     * 姓名类型：firstName（名）、lastName（姓）、fullName（全名）
+     * 多语言文件 key，默认映射 {@code i18n/mock/phone_{locale}.properties}。
      */
-    String i18nKey() default "mocke.phone";
+    String i18nKey() default "phone";
 
     /**
-     * 多语言支持
-     * 支持：zh-CN（中文）、en-US（英文）、ja-JP（日文）、ko-KR（韩文）
-     * AUTO：自动获取当前环境的多语言配置
-     * NONE：不使用多语言配置
+     * 多语言支持，语义见 {@link MockName#lang()}。
      */
     String lang() default "AUTO";
+
+    /**
+     * 自定义 generator 的 bean 名称，仅 {@code GENER} 模式生效。
+     */
+    String generator() default "";
+
+    /**
+     * 固定值，仅 {@code FIXED} 模式生效。
+     */
+    String fixedValue() default "";
+
+    /**
+     * 电话类型
+     */
+    Type type() default Type.MOBILE;
+
+    enum Type {
+        MOBILE,
+        TELEPHONE,
+        FAX,
+        ANY
+    }
 }

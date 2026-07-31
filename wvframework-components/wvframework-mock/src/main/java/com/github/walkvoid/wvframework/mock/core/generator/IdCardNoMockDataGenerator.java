@@ -1,7 +1,7 @@
 package com.github.walkvoid.wvframework.mock.core.generator;
 
 import com.github.walkvoid.wvframework.mock.annotation.MockIdCardNo;
-import com.github.walkvoid.wvframework.mock.util.MockI18nUtil;
+import com.github.walkvoid.wvframework.mock.util.MockRuleResolver;
 import com.github.walkvoid.wvframework.utils.RandomUtils;
 import org.springframework.stereotype.Component;
 
@@ -26,73 +26,69 @@ public class IdCardNoMockDataGenerator implements MockDataGenerator<String> {
     @Override
     public String generate(Field field, Object annotation, String lang) {
         MockIdCardNo mockAnnotation = (MockIdCardNo) annotation;
-        String actualLang = MockI18nUtil.resolveLang(mockAnnotation.lang());
-        
+        String mode = mockAnnotation.lang();
         MockIdCardNo.Type type = mockAnnotation.type();
-        
+
+        if (MockRuleResolver.LANG_FIXED.equalsIgnoreCase(mode)) {
+            return mockAnnotation.fixedValue();
+        }
+
+        String rule = MockRuleResolver.resolve(mode, mockAnnotation.i18nKey(), mockAnnotation.rules());
+        if (rule != null && !rule.isEmpty()) {
+            String fromRule = RandomUtils.fromRule(rule);
+            if (!fromRule.isEmpty()) {
+                return fromRule;
+            }
+        }
+
+        return legacyGenerate(type);
+    }
+
+    private String legacyGenerate(MockIdCardNo.Type type) {
         switch (type) {
             case PASSPORT:
-                return generatePassport(actualLang);
+                return generatePassport();
             case DRIVER_LICENSE:
-                return generateDriverLicense(actualLang);
+                return generateDriverLicense();
             case ID_CARD:
             default:
-                return generateIdCard(actualLang);
+                return generateIdCard();
         }
     }
 
     /**
      * 生成18位身份证号
      */
-    private String generateIdCard(String lang) {
+    private String generateIdCard() {
         StringBuilder sb = new StringBuilder();
-        
-        // 1-2位：省代码
+
         sb.append(RandomUtils.random(ZH_CN_PROVINCES));
-        
-        // 3-4位：市代码
         sb.append(String.format("%02d", RandomUtils.nextInt(1, 99)));
-        
-        // 5-6位：区代码
         sb.append(String.format("%02d", RandomUtils.nextInt(1, 99)));
-        
-        // 7-14位：出生日期
+
         LocalDate birthDate = RandomUtils.nextDate(
                 LocalDate.of(1960, 1, 1),
                 LocalDate.of(2005, 12, 31)
         );
         sb.append(birthDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        
-        // 15-17位：顺序码
         sb.append(String.format("%03d", RandomUtils.nextInt(1, 999)));
-        
-        // 18位：校验码
         sb.append(calculateCheckCode(sb.toString()));
-        
         return sb.toString();
     }
 
-    /**
-     * 计算身份证校验码
-     */
     private char calculateCheckCode(String idCard17) {
         int[] weights = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
         char[] checkCodes = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
-        
+
         int sum = 0;
         for (int i = 0; i < 17; i++) {
             sum += (idCard17.charAt(i) - '0') * weights[i];
         }
-        
         return checkCodes[sum % 11];
     }
 
-    /**
-     * 生成护照号
-     */
-    private String generatePassport(String lang) {
+    private String generatePassport() {
         StringBuilder sb = new StringBuilder();
-        // 护照号格式：E + 8位数字
         sb.append("E");
         for (int i = 0; i < 8; i++) {
             sb.append(RandomUtils.nextInt(0, 9));
@@ -100,12 +96,8 @@ public class IdCardNoMockDataGenerator implements MockDataGenerator<String> {
         return sb.toString();
     }
 
-    /**
-     * 生成驾驶证号
-     */
-    private String generateDriverLicense(String lang) {
+    private String generateDriverLicense() {
         StringBuilder sb = new StringBuilder();
-        // 驾驶证号格式：12位数字
         for (int i = 0; i < 12; i++) {
             sb.append(RandomUtils.nextInt(0, 9));
         }
