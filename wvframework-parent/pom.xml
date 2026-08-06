@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -34,6 +34,9 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <release>${java.version}</release>
                         <parameters>true</parameters>
+                        <jdkToolchain>
+                            <version>${java.version}</version>
+                        </jdkToolchain>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -42,6 +45,9 @@
                     <version>3.2.2</version>
                     <configuration>
                         <failIfNoTests>false</failIfNoTests>
+                        <jdkToolchain>
+                            <version>${java.version}</version>
+                        </jdkToolchain>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -83,17 +89,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>mavenCentral</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>mavenLocal</id>
-            <name>Maven Local</name>
-            <url>file://${user.home}/.m2/repository</url>
-        </repository>
-    </repositories>
 </project>

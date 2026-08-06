@@ -13,7 +13,7 @@
     <artifactId>wvframework-starters</artifactId>
     <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>>wvframework-starters</name>
+    <name>wvframework-starters</name>
     <description>Walkvoid Framework spring boot starters</description>
 
     <modules>
