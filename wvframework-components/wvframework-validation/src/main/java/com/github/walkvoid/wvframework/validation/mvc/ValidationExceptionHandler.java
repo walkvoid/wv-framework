@@ -1,8 +1,6 @@
-package com.github.walkvoid.wvframework.validation.mvc;
+﻿package com.github.walkvoid.wvframework.validation.mvc;
 
-import com.github.walkvoid.wvframework.models.HttpStatus;
-import com.github.walkvoid.wvframework.models.MessageLevel;
-import com.github.walkvoid.wvframework.models.WebResponse;
+import com.github.walkvoid.wvframework.models.ApiResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -22,33 +20,33 @@ public class ValidationExceptionHandler {
      * @RequestBody 上校验失败后抛出的异常是 MethodArgumentNotValidException 异常。
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public WebResponse<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ApiResult<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         String messages = bindingResult.getAllErrors()
                 .stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
+        return ApiResult.error(500, messages);
     }
 
     /**
      * 不加 @RequestBody注解，校验失败抛出的则是 BindException
      */
     @ExceptionHandler(value = BindException.class)
-    public WebResponse<?> exceptionHandler(BindException e) {
+    public ApiResult<?> exceptionHandler(BindException e) {
         String messages = e.getBindingResult().getAllErrors()
                 .stream()
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
+        return ApiResult.error(500, messages);
     }
 
     /**
      * @RequestParam 上校验失败后抛出的异常是 ConstraintViolationException
      */
     @ExceptionHandler({ConstraintViolationException.class})
-    public WebResponse<?> methodArgumentNotValid(ConstraintViolationException exception) {
+    public ApiResult<?> methodArgumentNotValid(ConstraintViolationException exception) {
         String messages = exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
-        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, messages, null, MessageLevel.ERROR);
+        return ApiResult.error(500, messages);
     }
 }
