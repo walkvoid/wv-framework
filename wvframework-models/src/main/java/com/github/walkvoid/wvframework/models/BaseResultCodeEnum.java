@@ -1,4 +1,4 @@
-﻿package com.github.walkvoid.wvframework.models;
+package com.github.walkvoid.wvframework.models;
 
 public enum BaseResultCodeEnum implements ResultCode {
 

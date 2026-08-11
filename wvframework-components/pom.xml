@@ -28,5 +28,6 @@
         <module>wvframework-feign</module>
         <module>wvframework-crypto</module>
         <module>wvframework-httplog</module>
+        <module>wvframework-fileservice</module>
     </modules>
 </project>

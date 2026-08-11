@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.walkvoid.wvframework</groupId>
+        <artifactId>wvframework-components</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>wvframework-fileservice</artifactId>
+    <packaging>jar</packaging>
+    <name>wvframework-fileservice</name>
+    <description>WV Framework File Service - MinIO based file storage</description>
+
+    <dependencies>
+        <!-- Framework internal -->
+        <dependency>
+            <groupId>com.github.walkvoid.wvframework</groupId>
+            <artifactId>wvframework-models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.walkvoid.wvframework</groupId>
+            <artifactId>wvframework-utils</artifactId>
+        </dependency>
+
+        <!-- MinIO -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+
+        <!-- Spring Boot (provided - consumer provides) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- MyBatis Plus (provided - consumer provides) -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>${mybatis-plus-boot3.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Jakarta annotation -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SLF4J (provided) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Lombok (provided) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Swagger Annotations (provided) -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
