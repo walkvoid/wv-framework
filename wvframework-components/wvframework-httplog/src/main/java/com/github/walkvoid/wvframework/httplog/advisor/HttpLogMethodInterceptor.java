@@ -74,6 +74,10 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
             return invocation.proceed();
         }
 
+        if (!isLoggingEnabled(method)) {
+            return invocation.proceed();
+        }
+
         // 解析注解属性，合并全局配置
         ResolvedHttpLogConfig config = resolver.resolve(httpLog);
         if (config == null || !config.isEnabled()) {
@@ -154,10 +158,84 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
     }
 
     /**
+     * 判断当前场景是否允许记录日志
+     */
+    private boolean isLoggingEnabled(Method method) {
+        if (!properties.isEnabled()) {
+            return false;
+        }
+        if (isFeignClient(method)) {
+            return properties.getFeign().isEnabled();
+        }
+        if (isHttpExchangeMethod(method)) {
+            return properties.getHttpExchange().isEnabled();
+        }
+        if (isControllerMethod(method)) {
+            return properties.getController().isEnabled();
+        }
+        if (isControllerRequest()) {
+            return properties.getController().isEnabled();
+        }
+        return properties.getFeign().isEnabled() || properties.getHttpExchange().isEnabled();
+    }
+
+    /**
      * 判断是否为 Controller 入站请求
      */
     private boolean isControllerRequest() {
         return RequestContextHolder.getRequestAttributes() != null;
+    }
+
+    private boolean isControllerMethod(Method method) {
+        Class<?> declaringClass = method.getDeclaringClass();
+        return declaringClass.isAnnotationPresent(org.springframework.web.bind.annotation.RestController.class)
+                || declaringClass.isAnnotationPresent(org.springframework.stereotype.Controller.class);
+    }
+
+    private boolean isFeignClient(Method method) {
+        try {
+            Class<?> feignClientAnnotation = Class.forName("org.springframework.cloud.openfeign.FeignClient");
+            Class<?> declaringClass = method.getDeclaringClass();
+            if (declaringClass.isAnnotationPresent(feignClientAnnotation)) {
+                return true;
+            }
+            for (Class<?> iface : declaringClass.getInterfaces()) {
+                if (iface.isAnnotationPresent(feignClientAnnotation)) {
+                    return true;
+                }
+            }
+        } catch (ClassNotFoundException ignored) {
+            // OpenFeign 不在 classpath
+        }
+        return false;
+    }
+
+    private boolean isHttpExchangeMethod(Method method) {
+        try {
+            Class<?> httpExchangeAnnotation = Class.forName("org.springframework.web.service.annotation.HttpExchange");
+            Class<?> declaringClass = method.getDeclaringClass();
+            if (declaringClass.isAnnotationPresent(httpExchangeAnnotation)) {
+                return true;
+            }
+            for (Class<?> iface : declaringClass.getInterfaces()) {
+                if (iface.isAnnotationPresent(httpExchangeAnnotation)) {
+                    return true;
+                }
+            }
+            return method.isAnnotationPresent(
+                            Class.forName("org.springframework.web.service.annotation.GetExchange"))
+                    || method.isAnnotationPresent(
+                            Class.forName("org.springframework.web.service.annotation.PostExchange"))
+                    || method.isAnnotationPresent(
+                            Class.forName("org.springframework.web.service.annotation.PutExchange"))
+                    || method.isAnnotationPresent(
+                            Class.forName("org.springframework.web.service.annotation.DeleteExchange"))
+                    || method.isAnnotationPresent(
+                            Class.forName("org.springframework.web.service.annotation.PatchExchange"));
+        } catch (ClassNotFoundException ignored) {
+            // @HttpExchange 不在 classpath
+        }
+        return false;
     }
 
     /**

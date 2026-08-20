@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "wv.httplog")
 public class HttpLogProperties {
 
-    /** 全局开关 */
+    /** 全局开关（false 时整个 httplog 模块不生效） */
     private boolean enabled = true;
 
     /** 默认是否记录请求信息 */

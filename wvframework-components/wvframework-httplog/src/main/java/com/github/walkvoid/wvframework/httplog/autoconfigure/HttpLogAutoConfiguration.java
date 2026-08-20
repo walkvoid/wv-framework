@@ -35,10 +35,9 @@ import org.springframework.context.annotation.Configuration;
 public class HttpLogAutoConfiguration {
 
     /**
-     * 注册 HTTP 日志 Advisor
+     * 注册 HTTP 日志 Advisor（全局开关见 {@code wv.httplog.enabled}）
      */
     @Bean
-    @ConditionalOnProperty(name = "wv.httplog.controller.enabled", havingValue = "true", matchIfMissing = true)
     public HttpLogAdvisor httpLogAdvisor(
             HttpLogPublisher publisher,
             HttpLogProperties properties,
@@ -53,7 +52,6 @@ public class HttpLogAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(HttpLogPublisher.class)
-    @ConditionalOnProperty(name = "wv.httplog.enabled", havingValue = "true", matchIfMissing = true)
     public HttpLogPublisher databaseHttpLogPublisher(ObjectProvider<HttpLogMapper> httpLogMapper) {
         HttpLogMapper mapper = httpLogMapper.getIfAvailable();
         if (mapper != null) {
