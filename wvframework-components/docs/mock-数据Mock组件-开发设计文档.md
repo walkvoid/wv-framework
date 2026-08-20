@@ -1,4 +1,4 @@
-﻿# wvframework-mock 数据 Mock 组件 - 开发设计文档
+# wvframework-mock 数据 Mock 组件 - 开发设计文档
 > **创建时间**: 2026-07-25  
 > **技术栈**: Java 17+、Spring Boot 3.x、Spring AOP、Jackson
 ---

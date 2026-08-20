@@ -1,4 +1,4 @@
-﻿package com.github.walkvoid.wvframework.core;
+package com.github.walkvoid.wvframework.core;
 
 import com.github.walkvoid.wvframework.models.ApiResult;
 import com.github.walkvoid.wvframework.models.BaseResultCodeEnum;

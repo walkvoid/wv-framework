@@ -1,4 +1,4 @@
-﻿package com.github.walkvoid.wvframework.validation.mvc;
+package com.github.walkvoid.wvframework.validation.mvc;
 
 import com.github.walkvoid.wvframework.models.ApiResult;
 import org.springframework.validation.BindException;
