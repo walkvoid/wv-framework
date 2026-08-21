@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -244,6 +247,82 @@ public final class HttpLogUtils {
             log.trace("Failed to serialize object to JSON", e);
             return obj.toString();
         }
+    }
+
+    /**
+     * 将 HTTP Body 字节按合适字符集解码为字符串。
+     *
+     * <p>Servlet 容器在未显式设置编码时常返回 {@code ISO-8859-1}，若正文实际为 UTF-8
+     *（如 {@code application/json}），会导致中文乱码。解析顺序：
+     * <ol>
+     *   <li>Content-Type 中的 charset</li>
+     *   <li>显式 characterEncoding（忽略容器默认的 Latin-1，除非 Content-Type 明确指定）</li>
+     *   <li>UTF-8</li>
+     * </ol>
+     */
+    public static String bytesToString(byte[] bytes, String characterEncoding, String contentType) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+        return new String(bytes, resolveBodyCharset(characterEncoding, contentType));
+    }
+
+    /**
+     * 解析 HTTP Body 字符集，默认 UTF-8，避免 Latin-1 默认值造成中文乱码。
+     */
+    public static Charset resolveBodyCharset(String characterEncoding, String contentType) {
+        Charset fromContentType = parseCharsetFromContentType(contentType);
+        if (fromContentType != null) {
+            return fromContentType;
+        }
+        if (characterEncoding != null && !characterEncoding.isBlank() && !isLatin1(characterEncoding)) {
+            try {
+                return Charset.forName(characterEncoding.trim());
+            } catch (Exception ignored) {
+                // fall through
+            }
+        }
+        return StandardCharsets.UTF_8;
+    }
+
+    private static Charset parseCharsetFromContentType(String contentType) {
+        if (contentType == null || contentType.isEmpty()) {
+            return null;
+        }
+        String lower = contentType.toLowerCase(Locale.ROOT);
+        int idx = lower.indexOf("charset=");
+        if (idx < 0) {
+            return null;
+        }
+        String value = contentType.substring(idx + "charset=".length()).trim();
+        if (value.isEmpty()) {
+            return null;
+        }
+        char quote = value.charAt(0);
+        if (quote == '"' || quote == '\'') {
+            int end = value.indexOf(quote, 1);
+            value = end > 0 ? value.substring(1, end) : value.substring(1);
+        } else {
+            int semi = value.indexOf(';');
+            if (semi >= 0) {
+                value = value.substring(0, semi);
+            }
+            value = value.trim();
+        }
+        if (value.isEmpty()) {
+            return null;
+        }
+        try {
+            return Charset.forName(value);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static boolean isLatin1(String encoding) {
+        return "ISO-8859-1".equalsIgnoreCase(encoding)
+                || "ISO_8859_1".equalsIgnoreCase(encoding)
+                || "latin1".equalsIgnoreCase(encoding);
     }
 
     /**

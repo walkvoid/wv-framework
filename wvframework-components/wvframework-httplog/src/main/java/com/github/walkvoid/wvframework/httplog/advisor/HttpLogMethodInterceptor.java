@@ -12,6 +12,7 @@ import com.github.walkvoid.wvframework.httplog.resolver.SensitiveFieldMasker;
 import com.github.walkvoid.wvframework.httplog.util.HttpLogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
@@ -194,7 +195,8 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
 
     private boolean isFeignClient(Method method) {
         try {
-            Class<?> feignClientAnnotation = Class.forName("org.springframework.cloud.openfeign.FeignClient");
+            Class<? extends Annotation> feignClientAnnotation =
+                    loadAnnotationClass("org.springframework.cloud.openfeign.FeignClient");
             Class<?> declaringClass = method.getDeclaringClass();
             if (declaringClass.isAnnotationPresent(feignClientAnnotation)) {
                 return true;
@@ -212,7 +214,8 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
 
     private boolean isHttpExchangeMethod(Method method) {
         try {
-            Class<?> httpExchangeAnnotation = Class.forName("org.springframework.web.service.annotation.HttpExchange");
+            Class<? extends Annotation> httpExchangeAnnotation =
+                    loadAnnotationClass("org.springframework.web.service.annotation.HttpExchange");
             Class<?> declaringClass = method.getDeclaringClass();
             if (declaringClass.isAnnotationPresent(httpExchangeAnnotation)) {
                 return true;
@@ -223,19 +226,25 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
                 }
             }
             return method.isAnnotationPresent(
-                            Class.forName("org.springframework.web.service.annotation.GetExchange"))
+                            loadAnnotationClass("org.springframework.web.service.annotation.GetExchange"))
                     || method.isAnnotationPresent(
-                            Class.forName("org.springframework.web.service.annotation.PostExchange"))
+                            loadAnnotationClass("org.springframework.web.service.annotation.PostExchange"))
                     || method.isAnnotationPresent(
-                            Class.forName("org.springframework.web.service.annotation.PutExchange"))
+                            loadAnnotationClass("org.springframework.web.service.annotation.PutExchange"))
                     || method.isAnnotationPresent(
-                            Class.forName("org.springframework.web.service.annotation.DeleteExchange"))
+                            loadAnnotationClass("org.springframework.web.service.annotation.DeleteExchange"))
                     || method.isAnnotationPresent(
-                            Class.forName("org.springframework.web.service.annotation.PatchExchange"));
+                            loadAnnotationClass("org.springframework.web.service.annotation.PatchExchange"));
         } catch (ClassNotFoundException ignored) {
             // @HttpExchange 不在 classpath
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Annotation> loadAnnotationClass(String className)
+            throws ClassNotFoundException {
+        return (Class<? extends Annotation>) Class.forName(className);
     }
 
     /**
@@ -328,7 +337,10 @@ public class HttpLogMethodInterceptor implements MethodInterceptor {
                 if (config.isLogResponseBody()) {
                     byte[] responseBody = wrappedResponse.getContentAsByteArray();
                     if (responseBody.length > 0) {
-                        String body = new String(responseBody, wrappedResponse.getCharacterEncoding());
+                        String body = HttpLogUtils.bytesToString(
+                                responseBody,
+                                wrappedResponse.getCharacterEncoding(),
+                                wrappedResponse.getContentType());
                         builder.responseBody(masker.mask(body, config.getMaxBodyLength(), config.getMaskFields()));
                     }
                 }

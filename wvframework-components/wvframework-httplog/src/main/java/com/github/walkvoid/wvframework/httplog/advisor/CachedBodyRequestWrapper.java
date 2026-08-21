@@ -1,13 +1,15 @@
 package com.github.walkvoid.wvframework.httplog.advisor;
 
+import com.github.walkvoid.wvframework.httplog.util.HttpLogUtils;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.BufferedReader;
+import java.nio.charset.Charset;
 import org.springframework.util.StreamUtils;
 
 /**
@@ -34,12 +36,9 @@ public class CachedBodyRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public BufferedReader getReader() {
-        String encoding = getCharacterEncoding();
-        if (encoding == null) {
-            encoding = "UTF-8";
-        }
+        Charset charset = HttpLogUtils.resolveBodyCharset(getCharacterEncoding(), getContentType());
         return new BufferedReader(new InputStreamReader(
-                new ByteArrayInputStream(this.cachedBody), java.nio.charset.Charset.forName(encoding)));
+                new ByteArrayInputStream(this.cachedBody), charset));
     }
 
     /**
@@ -50,14 +49,10 @@ public class CachedBodyRequestWrapper extends HttpServletRequestWrapper {
     }
 
     /**
-     * 获取请求体字符串
+     * 获取请求体字符串（按 Content-Type / 显式编码解析，默认 UTF-8）
      */
     public String getCachedBodyAsString() {
-        String encoding = getCharacterEncoding();
-        if (encoding == null) {
-            encoding = "UTF-8";
-        }
-        return new String(this.cachedBody, java.nio.charset.Charset.forName(encoding));
+        return HttpLogUtils.bytesToString(this.cachedBody, getCharacterEncoding(), getContentType());
     }
 
     /**
