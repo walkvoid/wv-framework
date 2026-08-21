@@ -22,7 +22,6 @@ public class FileInfo implements Serializable {
     private Long id;
 
     /** 文件Key */
-    @TableId
     private String fileKey;
 
     /** 原始文件名 */
@@ -45,6 +44,9 @@ public class FileInfo implements Serializable {
 
     /** 访问链接 */
     private String accessUrl;
+
+    /** 过期时间；到期后不可下载，由清理任务删除 MinIO 对象 */
+    private LocalDateTime expireTime;
 
     /** 创建时间 */
     private LocalDateTime createTime;

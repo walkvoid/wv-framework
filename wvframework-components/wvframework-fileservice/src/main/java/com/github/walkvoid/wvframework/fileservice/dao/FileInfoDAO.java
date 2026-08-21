@@ -9,6 +9,7 @@ import com.github.walkvoid.wvframework.fileservice.mapper.FileInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,6 +25,10 @@ public class FileInfoDAO {
 
     public int insert(FileInfo entity) {
         return mapper.insert(entity);
+    }
+
+    public int updateById(FileInfo entity) {
+        return mapper.updateById(entity);
     }
 
     public int deleteById(Long id) {
@@ -43,6 +48,14 @@ public class FileInfoDAO {
         return mapper.selectList(new QueryWrapper<FileInfo>()
                 .eq("biz_code", bizCode)
                 .orderByDesc("create_time"));
+    }
+
+    public List<FileInfo> selectExpired(LocalDateTime now, int limit) {
+        return mapper.selectList(new QueryWrapper<FileInfo>()
+                .isNotNull("expire_time")
+                .lt("expire_time", now)
+                .orderByAsc("expire_time")
+                .last("LIMIT " + Math.max(1, limit)));
     }
 
     public PageDTO<FileInfo> page(PageRequest<Void> pageRequest) {

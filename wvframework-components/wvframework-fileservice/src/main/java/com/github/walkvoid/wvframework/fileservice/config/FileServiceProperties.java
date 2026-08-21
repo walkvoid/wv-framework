@@ -31,6 +31,12 @@ public class FileServiceProperties {
     /** 临时链接默认有效时间 (seconds) */
     private long accessUrlExpirySeconds = 3600;
 
+    /** 上传文件默认保留天数（写入 expire_time） */
+    private int expireDays = 7;
+
+    /** 是否启用过期文件定时清理 */
+    private boolean expireCleanupEnabled = true;
+
     public String getEndpoint() { return endpoint; }
     public void setEndpoint(String endpoint) { this.endpoint = endpoint; }
 
@@ -51,4 +57,10 @@ public class FileServiceProperties {
 
     public long getAccessUrlExpirySeconds() { return accessUrlExpirySeconds; }
     public void setAccessUrlExpirySeconds(long accessUrlExpirySeconds) { this.accessUrlExpirySeconds = accessUrlExpirySeconds; }
+
+    public int getExpireDays() { return expireDays; }
+    public void setExpireDays(int expireDays) { this.expireDays = expireDays; }
+
+    public boolean isExpireCleanupEnabled() { return expireCleanupEnabled; }
+    public void setExpireCleanupEnabled(boolean expireCleanupEnabled) { this.expireCleanupEnabled = expireCleanupEnabled; }
 }

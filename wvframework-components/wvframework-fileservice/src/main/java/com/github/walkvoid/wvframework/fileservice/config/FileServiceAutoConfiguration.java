@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 文件服务自动配置
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.ComponentScan;
 @AutoConfiguration
 @EnableConfigurationProperties(FileServiceProperties.class)
 @ConditionalOnProperty(prefix = "wv.file", name = "enabled", havingValue = "true", matchIfMissing = true)
+@EnableScheduling
 @ComponentScan({"com.github.walkvoid.wvframework.fileservice"})
 @MapperScan("com.github.walkvoid.wvframework.fileservice.mapper")
 public class FileServiceAutoConfiguration {
